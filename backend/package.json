@@ -1,5 +1,6 @@
 {
   "name": "backend",
+  "home":"forms",
   "version": "1.0.0",
   "description": "",
   "type": "module",
