@@ -1,6 +1,6 @@
 {
   "name": "dgoae_forms",
-  "home":"forms",
+  "homepage":"forms",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
