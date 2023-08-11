@@ -20,7 +20,7 @@ function App() {
         <>
           <Router>
             <Routes>
-              <Route path="/" element={<Test />} />
+              <Route path="/forms" element={<Test />} />
               
             </Routes>
           </Router>
