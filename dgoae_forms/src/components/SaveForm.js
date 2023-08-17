@@ -14,7 +14,7 @@ const SaveForm = () => {
   useEffect(() => {
     async function getGlobalID() {
       var request = await axios.get(
-        `http://localhost:9000/getGlobalID?id=${id}`
+        `https://dgoae.digitaloe.unam.mx/apiforms/getGlobalID?id=${id}`
       );
       setGlobal(request.data.gid);
       console.log(request.data);
@@ -43,7 +43,7 @@ const SaveForm = () => {
             <br />
           </p>
 
-          <ClipboardCopy copyText={window.location.origin + "/response/" + global_id}/>
+          <ClipboardCopy copyText={window.location.origin + "/dgoaeforms" + "/response/" + global_id}/>
           {/* <Link to={"/response/" + global_id} style={
             {
               color: "black",

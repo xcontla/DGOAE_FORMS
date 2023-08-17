@@ -34,7 +34,7 @@ function Template() {
     ];
     try {
       const response = await axios({
-        url: `http://localhost:9000/add_question?username=${user.name}&doc_id=${id_}`,
+        url: `https://dgoae.digitaloe.unam.mx/apiforms/add_question?username=${user.name}&doc_id=${id_}`,
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +84,7 @@ function Template() {
     ];
     try {
       const response = await axios({
-        url: `http://localhost:9000/add_question?username=${user.name}&doc_id=${id_}`,
+        url: `https://dgoae.digitaloe.unam.mx/apiforms/add_question?username=${user.name}&doc_id=${id_}`,
         method: "post",
         headers: {
           "Content-Type": "application/json",

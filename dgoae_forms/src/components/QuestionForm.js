@@ -1,4 +1,4 @@
-import react, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import { useParams } from "react-router";
@@ -58,7 +58,7 @@ function QuestionForm() {
   useEffect(() => {
     async function data_adding() {
       var request = await axios.get(
-        `http://localhost:9000/data?username=${user.name}&doc_id=${id}`
+        `https://dgoae.digitaloe.unam.mx/apiforms/data?username=${user.name}&doc_id=${id}`
       );
       var question_data = request.data.questions;
 
@@ -321,7 +321,7 @@ function QuestionForm() {
 
     try {
       const response = await axios.post(
-        `http://localhost:9000/add_question?username=${user.name}&doc_id=${id}`,
+        `https://dgoae.digitaloe.unam.mx/apiforms/add_question?username=${user.name}&doc_id=${id}`,
         {
           document_name: documentName,
           document_description: documentDescription,

@@ -21,7 +21,7 @@ function App() {
     <div className="App">
       {isAuthenticated ? (
         <>
-          <Router>
+          <Router basename="/dgoaeforms">
             <Routes>
               <Route path="/" element={<Welcome />} />
               <Route path="/form/:id" element={<Forms />} />
@@ -34,7 +34,7 @@ function App() {
         </>
       ) : (
         <>
-          <Router>
+          <Router basename="/dgoaeforms">
             <Routes>
               <Route path="/" element={<LoginButton />} />
               <Route path="/response/:global_id" element={<UserForm />} />

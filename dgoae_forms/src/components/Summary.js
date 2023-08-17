@@ -26,7 +26,7 @@ function Summary() {
 
         async function getReponses() {
 
-            var request = await axios.get(`http://localhost:9000/getResponses?id=${id}`);
+            var request = await axios.get(`https://dgoae.digitaloe.unam.mx/apiforms/getResponses?id=${id}`);
 
             responses = request.data.resp;
 

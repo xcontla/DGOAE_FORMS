@@ -44,7 +44,7 @@ function UserForm() {
   useEffect(() => {
     async function getForm() {
       var request = await axios.get(
-        `http://localhost:9000/getform?global_id=${global_id}`
+        `https://dgoae.digitaloe.unam.mx/apiforms/getform?global_id=${global_id}`
       );
       console.log(request.data.questions);
       var question_data = request.data.questions;
@@ -146,7 +146,7 @@ function UserForm() {
       }
     });
 
-    axios.post(`http://localhost:9000/student_response`, {
+    axios.post(`https://dgoae.digitaloe.unam.mx/apiforms/student_response`, {
       global_id: global_id,
       column: quest_excel,
       doc_name: doc_name,

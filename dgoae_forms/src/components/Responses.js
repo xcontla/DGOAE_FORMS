@@ -23,7 +23,7 @@ function Responses() {
   useEffect(() => {
     async function getReponses() {
       var request = await axios.get(
-        `http://localhost:9000/getResponses?id=${id}`
+        `https://dgoae.digitaloe.unam.mx/apiforms/getResponses?id=${id}`
       );
       console.log(request.data.resp)
 
@@ -66,7 +66,7 @@ function Responses() {
   async function enableForm(event, checked) {
     try {
       const response = await axios.post(
-        `http://localhost:9000/enable_disable`,
+        `https://dgoae.digitaloe.unam.mx/apiforms/enable_disable`,
         {
           fid: id,
           enabled: checked,
