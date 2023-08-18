@@ -39,6 +39,15 @@ header {
     cursor: pointer;
    
 }
+.logo_sm {
+    
+    
+    display: inline-flex;
+    cursor: pointer;
+    width: 10%;
+    height: 10%;
+   
+}
 
 .toggle {
     position: relative;

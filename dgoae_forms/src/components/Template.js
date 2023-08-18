@@ -1,19 +1,18 @@
 import React from "react";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { Icon, IconButton } from "@material-ui/core";
+//import MoreVertIcon from "@material-ui/icons/MoreVert";
+//import { Icon, IconButton } from "@material-ui/core";
 import UnfoldMoreIcon from "@material-ui/icons/UnfoldMore";
 import "./Template.css";
 
-import blank from "../images/forms-blank-googlecolors.png";
-import rsvp from "../images/EventeRSVP.png";
-import party from "../images/Party_invitation.png";
+import blank from "../images/forms-blank.png";
 import contact from "../images/contact.png";
 
 import uuid from "react-uuid";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useStateValue } from "./StateProvider";
+//import { useStateValue } from "./StateProvider";
+import { API_URL, MAIN_URL } from "../constants";
 
 function Template() {
   const navigate = useNavigate();
@@ -24,9 +23,9 @@ function Template() {
     console.log(id_, user.name);
     var question_list = [
       {
-        questionText: "Pregunta1",
+        questionText: "Escribe una pregunta",
         questionType: "radio",
-        options: [{ optionText: "Opcion 1" }],
+        options: [{ optionText: "Opción 1" }],
         open: true,
         required: false,
         isEncrypt: false
@@ -34,15 +33,15 @@ function Template() {
     ];
     try {
       const response = await axios({
-        url:  `https://dgoae.digitaloe.unam.mx/apiforms/add_question?username=${user.name}&doc_id=${id_}`,
+        url:  MAIN_URL + API_URL +`/add_question?username=${user.name}&doc_id=${id_}`,
         method: "post",
         headers: {
           "Content-Type": "application/json",
         },
         data: {
           id:id_,
-          document_name: "Untilted Form",
-          document_description: "Add Description",
+          document_name: "Documento Sin título",
+          document_description: "Agrega una Descripción",
           questions: question_list,
 
         },
@@ -63,7 +62,7 @@ function Template() {
         options: [{ optionText: "nombre_completo" }],
         open: true,
         required: true,
-        isEncrypt: false
+        isEncrypt: true
       },
       {
         questionText: "Correo electrónico",
@@ -71,20 +70,20 @@ function Template() {
         options: [{ optionText: "correo" }],
         open: false,
         required: true,
-        isEncrypt: false
+        isEncrypt: true
       },
       {
         questionText: "Número de Cuenta",
         questionType: "text",
         options: [{ optionText: "ncuenta" }],
         open: false,
-        required: false,
-        isEncrypt: false
+        required: true,
+        isEncrypt: true
       },
     ];
     try {
       const response = await axios({
-        url: `https://dgoae.digitaloe.unam.mx/add_question?username=${user.name}&doc_id=${id_}`,
+        url:  MAIN_URL + API_URL +`/add_question?username=${user.name}&doc_id=${id_}`,
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -124,17 +123,17 @@ function Template() {
           <p className="card_title">En Blanco</p>
         </div>
         <div className="card" onClick={createFormRegist}>
-          <img src={party} alt="no image" className="card_image" />
+          <img src={contact} alt="no image" className="card_image" />
           <p className="card_title">Registro Simple</p>
         </div>
-        <div className="card">
+        {/*<div className="card">
           <img src={rsvp} alt="no image" className="card_image" />
           <p className="card_title">RSVP</p>
         </div>
         <div className="card">
           <img src={contact} alt="no image" className="card_image" />
           <p className="card_title">Contact Information</p>
-        </div>
+        </div>*/}
       </div>
     </div>
   );

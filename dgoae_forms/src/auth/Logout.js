@@ -1,19 +1,22 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button } from "@material-ui/core";
+import { Button, styled } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { APP_URL2 } from "../constants";
+
 export const LogoutButton = () => {
   const { logout } = useAuth0();
-
-  // return <Button onClick={() => logout({returnTo: window.location.origin})} color='primary' >Salir</Button>
+  
   return (
     <Button
-      onClick={() => logout({ returnTo: window.location.origin + 'dgoaeforms' })}
+      style={{backgroundColor: "#b71c1c", color:"whitesmoke"}}
+      onClick={() => logout({ returnTo: window.location.origin + APP_URL2 })}
       variant="contained"
-      color="secondary"
-      startIcon={<ExitToAppIcon />}
+      startIcon={<ExitToAppIcon />
+      
+    }
     >
-      Salir
+      Cerrar Sesión
     </Button>
   );
 };

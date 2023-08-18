@@ -6,7 +6,8 @@ import {
 } from "@material-ui/core";
 import React from "react";
 
-import LogoDGOAE from "../images/logoUNAM.png";
+import LogoUNAM from "../images/logoUNAM.png";
+import LogoDGOAE from "../images/LogoDGOAEBlanco.png";
 
 import "./Login.css";
 
@@ -17,9 +18,10 @@ const LoginButton = () => {
 
   return (
     <div className="app">
-    <nav className="flex justify-between items-center bg-transparent p-4 ml-8  relative">
+    <nav className="flex justify-between items-center bg-transparent p-4 ml-8 relative">
       <div>
-        <img className="logo mt-8" src={LogoDGOAE} alt="Logo DGOAE" />
+        <img className="logo logo_sm mt-8" src={LogoUNAM} alt="Logo UNAM" />
+        <img className="logo logo_sm mt-1" src={LogoDGOAE} alt="Logo DGOAE" />
       </div>
       <div className="flex justify-between items-center bg-transparent p-4 mr-10">
         <PrivaceNotice />
@@ -27,8 +29,8 @@ const LoginButton = () => {
     </nav>
  
     <div className="text">
-      <h2>DGOAE FORMULARIO</h2>
-      <h3>Bienvenid@s a CuEV</h3>
+      <h2>DGOAE FORMULARIOS</h2>
+      <h3>Bienvenid@s</h3>
       <p>
         Una manera sencilla de hacer y resolver cuestionarios en la Dirección General de Orientación y Atención Educativa
       </p>

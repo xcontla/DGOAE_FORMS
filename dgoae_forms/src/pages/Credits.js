@@ -39,61 +39,64 @@ const Credits = () => {
                     Dirección de Orientación y Atención Educativa
                   </h5>
                   <h4 className="text-center">
+                  Director General
+                  </h4>
+                  <h4 className="text-center">
                     Dr. Germán Alvarez Díaz de León
                   </h4>
-                </div>
-              </div>
-              <hr className="my-4" />
-              <div className="flex">
-                <div className="w-1/2">
+                  <hr className="my-4" />
                   <h5 className="text-center text-blue-900">
                     Centro de Orientación Educativa
                   </h5>
+                  
+                  <h4 className="text-center">
+                    Coordinadora
+                  </h4>
                   <h4 className="text-center">
                     Dra. Wendy Abigail Bautista Montoya
                   </h4>
-                </div>
-                <div className="w-1/2">
-                  <h5 className="text-center text-blue-900">
-                    Departamento de Instrumentos de Orientación
-                  </h5>
-                  <h4 className="text-center">
-                    Lic. Alejandro Garrido Hernández
-                  </h4>
-                </div>
-              </div>
-              <hr className="my-4" />
-              <div className="flex">
-                <div className="w-1/2">
-                  <h5 className="text-center text-blue-900">
-                    Dirección de Apoyo Técnico
-                  </h5>
-                  <h4 className="text-center">
-                    Lic. José Antonio Sánchez Yllanez
-                  </h4>
-                  <h4 className="text-center">
-                    M. en C. Pedro Xavier Contla Romero
-                  </h4>
-                </div>
-                <div className="w-1/2">
-                  <h5 className="text-center text-blue-900">
-                    Departamento de Diseño y Publicaciones
-                  </h5>
-                  <h4 className="text-center">Lic. Jaime Monroy Galindo</h4>
-                  <h4 className="text-center">Mtra. Verónica Balderas Rivas</h4>
                 </div>
               </div>
               <hr className="my-4" />
               <div className="flex">
                 <div className="w-full">
                   <h5 className="text-center text-blue-900">
-                    Material Audiovisual
+                    Dirección de Apoyo Técnico
                   </h5>
-                  <h4 className="text-center">Mtra. Marina Estrella Chávez</h4>
-                  <h4 className="text-center">Dra. Libia Gómez Altamirano</h4>
-                  <h4 className="text-center">Mtra. Evelia Valdovinos Tapia</h4>
+                  <h4 className="text-center">
+                    Director
+                  </h4>
+                  
+                  <h4 className="text-center">
+                    Lic. José Antonio Sánchez Yllanez (Director)
+                  </h4>                  
                 </div>
-              </div>
+                </div>
+                
+                <hr className="my-4" />
+                <div className="w-full">
+                  <h5 className="text-center text-blue-900">
+                    Departamento de Diseño y Publicaciones
+                  </h5>
+                  <h4 className="text-center">Lic. Jaime Monroy Galindo</h4>
+                  <h4 className="text-center">Mtra. Verónica Balderas Rivas</h4>
+                </div>
+                <hr className="my-4" />
+                  
+                  <h5 className="text-center text-blue-900">
+                    Desarrollador Jefe 
+                  </h5>
+                  <h4 className="text-center">
+                    M. en C. Pedro Xavier Contla Romero
+                  </h4>
+                  <h4 className="text-center">
+                    Desarollador Servicio Social
+                  </h4>
+                  <h4 className="text-center">
+                    Ángel Avelay
+                  </h4>
+              
+              <hr className="my-4" />
             </div>
           </div>
         </div>

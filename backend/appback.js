@@ -12,14 +12,14 @@ import Response from "./models/Response.js";
 import CryptoJS from "crypto-js";
 
 const appback = express();
-
 dotenv.config();
 
+const ENCRYPT_STRING = process.env.ENCRYPT_STRING;
 conectarDB();
 appback.use(bodyParser.json());
 appback.use(cors());
 appback.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*", "http://localhost:3001/*");
+  res.header("Access-Control-Allow-Origin", "*", "http://localhost:3001/*", "https://dgoae.digitaloe.unam.mx");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Request-With, Content-Type, Accept"
@@ -118,15 +118,16 @@ appback.post("/add_question", async (req, res) => {
   const encryptInformation = (wordTextPlain) => {
     var textoCifrado = CryptoJS.AES.encrypt(
       JSON.stringify(wordTextPlain),
-      "@DGOAE_3NCRYPT_1NF0RM4T10N"
+      ENCRYPT_STRING
     );
     return textoCifrado.toString();
   };
 
+  
   const decryptInformation = (wordTextCipher) => {
     var bytes = CryptoJS.AES.decrypt(
       wordTextCipher,
-      "@DGOAE_3NCRYPT_1NF0RM4T10N"
+      ENCRYPT_STRING
     );
     var textoPlano = bytes.toString(CryptoJS.enc.Utf8);
     return textoPlano;
@@ -176,11 +177,23 @@ appback.post("/add_question", async (req, res) => {
   }
 });
 
+appback.post("/remove_form", async (req, res) => {
+
+  const user_id = req.query.username;
+  const document_id = req.query.doc_id;
+ 
+  await Form.deleteOne({ IdPregunta: document_id });
+
+   const jsonres = { message:  "Usuario:" + user_id + " borró el formulario " + document_id };
+   return res.json(jsonres);
+  });
+
+
 appback.post("/student_response", async (req, res) => {
   const encryptInformation = (wordTextPlain) => {
     var textoCifrado = CryptoJS.AES.encrypt(
       JSON.stringify(wordTextPlain),
-      "@DGOAE_3NCRYPT_1NF0RM4T10N"
+      ENCRYPT_STRING
     );
     return textoCifrado.toString();
   };

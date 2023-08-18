@@ -5,7 +5,6 @@ export const ClipboardCopy = ({copyText}) => {
 
     const [isCopied, setIsCopied] = useState(false);
   
-    // This is the function we wrote earlier
     async function copyTextToClipboard(text) {
       if ('clipboard' in navigator) {
         return await navigator.clipboard.writeText(text);
@@ -14,12 +13,9 @@ export const ClipboardCopy = ({copyText}) => {
       }
     }
   
-    // onClick handler function for the copy button
     const handleCopyClick = () => {
-      // Asynchronously call copyTextToClipboard
       copyTextToClipboard(copyText)
         .then(() => {
-          // If successful, update the isCopied state value
           setIsCopied(true);
           setTimeout(() => {
             setIsCopied(false);

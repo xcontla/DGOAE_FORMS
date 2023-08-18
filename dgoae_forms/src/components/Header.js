@@ -13,6 +13,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { LogoutButton } from "../auth/Logout";
 import axios from "axios";
 import {  useNavigate } from "react-router-dom";
+import { API_URL, MAIN_URL } from "../constants";
 
 function Header() {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -26,7 +27,7 @@ function Header() {
   useEffect(() => {
     async function filesnames() {
       var request = await axios.get(
-         `https://dgoae.digitaloe.unam.mx/apiforms/get_all_filenames_by_user?username=${user.name}`
+         MAIN_URL + API_URL + `/get_all_filenames_by_user?username=${user.name}`
       );
       let filenames = request.data;
 
@@ -47,7 +48,6 @@ function Header() {
   return (
     <div className="header">
       <div className="header_info">
-        {/* <TemporaryDrawer /> */}
         <img
           src={formimage}
           alt="no img"
@@ -55,7 +55,7 @@ function Header() {
           height="30px"
           className="form_image"
         />
-        <div className="info">DGOAE-FORMS</div>
+        <div className="info">DGOAE-FORMULARIOS</div>
       </div>
       <div className="header_search">
      
@@ -76,9 +76,6 @@ function Header() {
       
       </div>
       <div className="header_right">
-        {/* <IconButton>
-          <AppsIcon />
-        </IconButton> */}
         <LogoutButton />
         <IconButton>
           <Avatar src={user.picture} />

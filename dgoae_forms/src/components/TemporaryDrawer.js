@@ -12,17 +12,12 @@ import {
 } from "@material-ui/core";
 import "./TemporaryDrawer.css";
 import docsimage from "../images/google_docs_logo.png";
-import sheetsimage from "../images/google_sheets_logo.png";
-import slidesimage from "../images/google_slides_logo.png";
 import formimage from "../images/google-forms-logo-icon.png";
-import googleimage from "../images/google_logo.png";
 import driveimage from "../images/google_drive_logo.png";
-import mailimage from "../images/google_mail_logo.png";
 
 import { FiSettings } from "react-icons/fi";
 import { BsQuestionCircle } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import Credits from "../pages/Credits";
 
 const useStyles = makeStyles({
   listItem: {

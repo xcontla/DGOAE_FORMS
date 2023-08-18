@@ -8,6 +8,8 @@ import './Summary.css'
 import Button from '@material-ui/core/Button'
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import {API_URL } from '../constants';
+
 
 function Summary() {
 
@@ -26,7 +28,7 @@ function Summary() {
 
         async function getReponses() {
 
-            var request = await axios.get( window.location.origin + `/apiforms/getResponses?id=${id}`);
+            var request = await axios.get( window.location.origin + API_URL + `/getResponses?id=${id}`);
 
             responses = request.data.resp;
 

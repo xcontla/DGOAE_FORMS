@@ -2,14 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, Typography } from "@material-ui/core";
 import { useNavigate, useParams } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
-import Alert from "@mui/material/Alert";
+import {API_URL, MAIN_URL} from '../constants';
 
 import CryptoJS from "crypto-js";
 
 import "./UserForm.css";
 
 import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
 
 function UserForm() {
   const { global_id } = useParams();
@@ -18,17 +17,18 @@ function UserForm() {
   var navigate = useNavigate();
   var [answer, setAnswer] = useState([]);
 
-  const [doc_name, setDocName] = useState("Untitled Document");
-  const [doc_desc, setDocDesc] = useState("Add Description");
+  const [doc_name, setDocName] = useState("Documento Sin título");
+  const [doc_desc, setDocDesc] = useState("Agrega una descripción");
   const [captchaVerification, setcaptchaVerification] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [isEncrypted, setIsEncrypted] = useState({});
-  const [isEnabled, setisEnabled] = useState(null);
+  //const [isEnabled, setisEnabled] = useState(null);
+  const ENCRYPT_STRING = process.env.SECRET_KEY;
 
   const encryptInformation = (wordTextPlain) => {
     var textoCifrado = CryptoJS.AES.encrypt(
       JSON.stringify(wordTextPlain),
-      "@DGOAE_3NCRYPT_1NF0RM4T10N"
+      ENCRYPT_STRING
     );
     return textoCifrado.toString();
   };
@@ -44,7 +44,7 @@ function UserForm() {
   useEffect(() => {
     async function getForm() {
       var request = await axios.get(
-         `https://dgoae.digitaloe.unam.mx/apiforms/getform?global_id=${global_id}`
+        MAIN_URL + API_URL + `/getform?global_id=${global_id}`
       );
       console.log(request.data.questions);
       var question_data = request.data.questions;
@@ -146,7 +146,7 @@ function UserForm() {
       }
     });
 
-    axios.post(`https://dgoae.digitaloe.unam.mx/apiforms/student_response`, {
+    axios.post( MAIN_URL + API_URL +`/student_response`, {
       global_id: global_id,
       column: quest_excel,
       doc_name: doc_name,

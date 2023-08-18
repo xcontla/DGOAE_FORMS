@@ -32,12 +32,6 @@ const Submitted = () => {
             Formulario enviado con exito
           </h1>
 
-          {/* <p className="text-gray-500 text-2xl leading-[2.5rem]">
-            Copia el siguiente link para el uso del cuestionario:
-            <br />
-          </p> */}
-          
-          
           <div className="flex flex-col md:flex-row items-center gap-4">
            
              <button

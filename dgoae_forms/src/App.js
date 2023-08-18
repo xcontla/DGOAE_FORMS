@@ -10,7 +10,8 @@ import Submitted from "./components/Submitted";
 import SaveForm from "./components/SaveForm";
 import Credits from "./pages/Credits";
 import Contact from "./pages/Contact";
-import Test from "./pages/Test";
+import Search from "./components/Search";
+import { APP_URL2 } from "./constants";
 
 
 
@@ -21,7 +22,7 @@ function App() {
     <div className="App">
       {isAuthenticated ? (
         <>
-          <Router basename="/dgoaeforms">
+          <Router basename={APP_URL2}>
             <Routes>
               <Route path="/" element={<Welcome />} />
               <Route path="/form/:id" element={<Forms />} />
@@ -33,12 +34,13 @@ function App() {
           </Router>
         </>
       ) : (
-        <>
-          <Router basename="/dgoaeforms">
+        <>   
+        <Router basename={APP_URL2}>
             <Routes>
               <Route path="/" element={<LoginButton />} />
               <Route path="/response/:global_id" element={<UserForm />} />
               <Route path="/submitted/:global_id" element={<Submitted />} />
+              <Route path="/search" element={Search}/>
             </Routes>
           </Router>
         </>

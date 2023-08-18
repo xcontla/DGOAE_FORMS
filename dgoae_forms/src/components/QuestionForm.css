@@ -194,7 +194,17 @@ justify-content: space-between;
     flex-direction: column;
     justify-content: baseline;
 }
-    
+
+.save_form{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+
+
  
 
  /* Estilos base */

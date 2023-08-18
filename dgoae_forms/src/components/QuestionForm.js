@@ -10,8 +10,8 @@ import Select from "@material-ui/core/Select";
 import Switch from "@material-ui/core/Switch";
 import CheckboxIcon from "@material-ui/icons/CheckBox";
 import SubjectIcon from "@material-ui/icons/Subject";
-import { BsTrash, BsFileText, BsFile } from "react-icons/bs";
-import { Icon, IconButton, MenuItem, Typography } from "@material-ui/core";
+import { BsTrash, BsFileText} from "react-icons/bs";
+import { IconButton, MenuItem, Typography } from "@material-ui/core";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Accordion from "@material-ui/core/Accordion";
@@ -30,18 +30,22 @@ import "./QuestionForm.css";
 import ShortText from "@material-ui/icons/ShortText";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
+import {API_URL, MAIN_URL, MAX_OPCIONES} from "../constants";
 
 function QuestionForm() {
+
   const { id } = useParams();
   const [{}, dispatch] = useStateValue();
   const { user } = useAuth0();
+
+  const ENCRYPT_STRING = process.env.SECRET_KEY;
 
   const navigate = useNavigate();
   const [isEncrypt, setIsEncrypt] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
   const [questions, setQuestions] = useState([
     {
-      questionText: "Pregunta 1",
+      questionText: "Pregunta",
       questionType: "radio1",
       options: [{ optionText: "Opción 1" }],
       answer: false,
@@ -52,13 +56,13 @@ function QuestionForm() {
     },
   ]);
 
-  const [documentName, setDocName] = useState("Untitled Document");
-  const [documentDescription, setDocDesc] = useState("Add Description");
+  const [documentName, setDocName] = useState("Documento sin título");
+  const [documentDescription, setDocDesc] = useState("Agrega una descripción");
 
   useEffect(() => {
     async function data_adding() {
       var request = await axios.get(
-         `https://dgoae.digitaloe.unam.mx/apiforms/data?username=${user.name}&doc_id=${id}`
+        MAIN_URL + API_URL + `/data?username=${user.name}&doc_id=${id}`
       );
       var question_data = request.data.questions;
 
@@ -96,7 +100,7 @@ function QuestionForm() {
   const encryptInformation = (wordTextPlain) => {
     var textoCifrado = CryptoJS.AES.encrypt(
       JSON.stringify(wordTextPlain),
-      "@DGOAE_3NCRYPT_1NF0RM4T10N"
+      ENCRYPT_STRING
     );
     return textoCifrado.toString();
   };
@@ -104,7 +108,7 @@ function QuestionForm() {
   const decryptInformation = (wordTextCipher) => {
     var bytes = CryptoJS.AES.decrypt(
       wordTextCipher,
-      "@DGOAE_3NCRYPT_1NF0RM4T10N"
+      ENCRYPT_STRING
     );
     var textoPlano = bytes.toString(CryptoJS.enc.Utf8);
     return textoPlano;
@@ -142,12 +146,12 @@ function QuestionForm() {
 
   function addOption(i) {
     var myquestions = [...questions];
-    if (myquestions[i].options.length < 5) {
+    if (myquestions[i].options.length < MAX_OPCIONES) {
       myquestions[i].options.push({
-        optionText: "Option" + (myquestions[i].options.length + 1),
+        optionText: "Opción " + (myquestions[i].options.length + 1),
       });
     } else {
-      console.log("Max 5 options");
+      console.log("Número de opciones máximo es " + MAX_OPCIONES);
     }
     setQuestions(myquestions);
   }
@@ -183,9 +187,9 @@ function QuestionForm() {
     setQuestions([
       ...questions,
       {
-        questionText: "Question",
+        questionText: "Pregunta: ",
         questionType: "radio1",
-        options: [{ optionText: "Option 1" }],
+        options: [{ optionText: "Opción 1" }],
         open: true,
         required: false,
       },
@@ -321,7 +325,7 @@ function QuestionForm() {
 
     try {
       const response = await axios.post(
-         `https://dgoae.digitaloe.unam.mx/apiforms/add_question?username=${user.name}&doc_id=${id}`,
+         MAIN_URL + API_URL + `add_question?username=${user.name}&doc_id=${id}`,
         {
           document_name: documentName,
           document_description: documentDescription,
@@ -339,6 +343,22 @@ function QuestionForm() {
   function regresarPrincipal() {
     navigate("/");
   }
+
+  async function removeForm() {
+
+    console.log("Borraremos el formulario: " + {id});
+      
+    try {
+      const response = await axios.post(
+         MAIN_URL + API_URL + `/remove_form?username=${user.name}&doc_id=${id}`,{}
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
+    regresarPrincipal()
+  }
+
 
   function questionUI() {
     return questions?.map((ques, i) => (
@@ -436,7 +456,7 @@ function QuestionForm() {
 
                       <div className="question_boxes">
                         {!questions[i].answer ? (
-                          <AccordionDetails className="add_question">
+                          <AccordionDetails className="add_question" >
                             <Typography
                               style={{
                                 fontSize: "15px",
@@ -446,22 +466,23 @@ function QuestionForm() {
                                 paddingBottom: "8px",
                                 alignItems: "initial",
                               }}
+                              title="Número de pregunta"
                             >
-                              {i + 1}
+                              {i + 1 + "."}
                             </Typography>
                             <div className="add_question_top">
                               <input
                                 type="text"
                                 className="question"
-                                placeholder="Question"
+                                placeholder='Escribe una respuesta' 
                                 value={ques.questionText}
                                 onChange={(e) =>
                                   changeQuestion(e.target.value, i)
                                 }
                               ></input>
-                              <CropOriginalIcon
+                              {/*<CropOriginalIcon
                                 style={{ color: "#5f6368", fontSize: "13px" }}
-                              />
+                              />*/}
                               <Select
                                 className="select"
                                 style={{ color: "#5f6368" }}
@@ -479,7 +500,7 @@ function QuestionForm() {
                                   <SubjectIcon
                                     style={{ marginRight: "10px" }}
                                   />{" "}
-                                  Parrafó
+                                  Párrafo (texto)
                                 </MenuItem>
                                 <MenuItem
                                   className="menuitem"
@@ -497,7 +518,7 @@ function QuestionForm() {
                                     }}
                                     checked
                                   />{" "}
-                                  CheckBoxes
+                                  Casilla de Verificación
                                 </MenuItem>
                                 <MenuItem
                                   className="menuitem"
@@ -532,7 +553,7 @@ function QuestionForm() {
                                   <input
                                     type="text"
                                     className="text_input"
-                                    placeholder="option"
+                                    placeholder="Escribe una Respuesta"
                                     value={
                                       ques.questionType !== "text"
                                         ? op.optionText
@@ -543,13 +564,14 @@ function QuestionForm() {
                                     }
                                   ></input>
                                 </div>
-                                {/* <CropOriginalIcon style={{ color: "#5f6368" , marginRight:"10px"}} /> */}
+                               
                                 <IconButton
                                   style={{
                                     color: "#5f6368",
                                     marginRight: "10px",
                                   }}
                                   aria-label="delete"
+                                  title="Borrar Opción"
                                   onClick={() => {
                                     removeOption(i, j);
                                   }}
@@ -559,7 +581,7 @@ function QuestionForm() {
                               </div>
                             ))}
 
-                            {ques.options.length < 5 &&
+                            {ques.options.length < MAX_OPCIONES &&
                             ques.questionType !== "text" ? (
                               <div className="add_question_body">
                                 <FormControlLabel
@@ -586,7 +608,7 @@ function QuestionForm() {
                                   }
                                   label={
                                     <div>
-                                      {/*<input type="text" className='text_input' style={{ fontSize: "13px", width: "150px" }} placeholder="Add other"></input>*/}
+                                
                                       <Button
                                         size="small"
                                         style={{
@@ -630,11 +652,12 @@ function QuestionForm() {
                                       marginRight: "8px",
                                     }}
                                   />
-                                  Answer Key
+                                  Hoja de respuestas
                                 </Button>
                               </div>
-                              <div className="add_question_bottom">
+                              <div className="add_question_bottom"> 
                                 <IconButton
+                                 title="Copiar Pregunta"
                                   aria-label="Copy"
                                   onClick={() => {
                                     copyQuestion(i);
@@ -643,6 +666,7 @@ function QuestionForm() {
                                   <FilterNoneIcon />
                                 </IconButton>
                                 <IconButton
+                                 title="Borrar Pregunta"
                                   arial-label="Delete"
                                   onClick={() => {
                                     deleteQuestion(i);
@@ -663,28 +687,9 @@ function QuestionForm() {
                                   }
                                   labelPlacement="start"
                                   label="Requerido"
+                                  title="Pregunta Obligatoria"
                                 />
-                                {/* <div className="column_switch">
-                                  <IconButton
-                                    onClick={() => {
-                                      requiredQuestion(i);
-                                    }}
-                                  >
-                                    <span
-                                      style={{
-                                        color: "#5f6368",
-                                        fontSize: "13px",
-                                      }}
-                                    >
-                                      Requerido
-                                    </span>
-                                    <Switch
-                                      name="checked"
-                                      color="primary"
-                                    ></Switch>
-                                  </IconButton>
-                                 
-                                </div> */}
+                               
                               </div>
                             </div>
                           </AccordionDetails>
@@ -698,7 +703,7 @@ function QuestionForm() {
                                 <input
                                   type="text"
                                   className="question"
-                                  placeholder="Question"
+                                  placeholder="Escribe una Pregunta"
                                   value={ques.questionText}
                                   disabled
                                 />
@@ -776,7 +781,7 @@ function QuestionForm() {
                                       marginRight: "8px",
                                     }}
                                   >
-                                    Add Answer Feedback
+                                    Agrega un retroalimentación a la respuesta
                                   </BsFileText>
                                 </Button>
                               </div>
@@ -795,14 +800,14 @@ function QuestionForm() {
                                     doneAnswer(i);
                                   }}
                                 >
-                                  Done
+                                  Hecho
                                 </Button>
                               </div>
                             </div>
                           </AccordionDetails>
                         )}
                         {!ques.answer ? (
-                          <div className="question_edit">
+                          <div className="question_edit" title="Agrega nueva pregunta">
                             <IconButton onClick={addMoreQuestionField}>
                               <AddCircleOutlineIcon className="edit" />
                             </IconButton>
@@ -834,7 +839,7 @@ function QuestionForm() {
                   type="text"
                   className="question_form_top_name"
                   style={{ color: "black" }}
-                  placeholder="Untitled Document"
+                  placeholder="Documento Sin Título"
                   value={documentName}
                   onChange={(e) => {
                     setDocName(e.target.value);
@@ -856,7 +861,7 @@ function QuestionForm() {
               <input
                 type="text"
                 className="question_form_top_desc"
-                placeholder="Form Description"
+                placeholder="Descripción del formulario"
                 value={documentDescription}
                 onChange={(e) => {
                   setDocDesc(e.target.value);
@@ -886,27 +891,18 @@ function QuestionForm() {
             >
               Guardar formulario
             </Button>
-            {/* <Button
+            { <Button
               variant="contained"
-              color="primary"
-              onClick={commitToDB}
-              style={{ fontSize: "14px" }}
+              color="secondary"
+              size="large"
+              onClick={ () => { if (window.confirm('¿Quieres borrar el formulario?')){ removeForm() }}}
+              startIcon={<BsTrash />}
             >
-              Guardar
-            </Button> */}
+              Borrar Formulario
+            </Button> }
           </div>
           <br></br>
           <hr />
-          <div className="save_form">
-            {/* <Button
-              variant="contained"
-              color="secondary"
-              onClick={regresarPrincipal}
-              style={{ fontSize: "14px" }}
-            >
-              Regresar
-            </Button> */}
-          </div>
         </div>
       </div>
     </div>

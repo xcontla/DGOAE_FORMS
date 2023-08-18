@@ -8,6 +8,7 @@ import CryptoJS from "crypto-js";
 
 import ReactPaginate from "react-paginate";
 import Button from "@material-ui/core/Button";
+import { API_URL, MAIN_URL } from "../constants";
 
 function Responses() {
   const { id } = useParams();
@@ -19,11 +20,11 @@ function Responses() {
   var [state, setState] = useState({ perPage: 2, page: 0, pages: 0 });
   var [items, setItems] = useState([]);
   var navigate = useNavigate();
-
+  const ENCRYPT_STRING = process.env.SECRET_KEY;
   useEffect(() => {
     async function getReponses() {
       var request = await axios.get(
-        `https://dgoae.digitaloe.unam.mx/apiforms/getResponses?id=${id}`
+        MAIN_URL + API_URL + `/getResponses?id=${id}`
       );
       console.log(request.data.resp)
 
@@ -66,7 +67,7 @@ function Responses() {
   async function enableForm(event, checked) {
     try {
       const response = await axios.post(
-         `https://dgoae.digitaloe.unam.mx/apiforms/enable_disable`,
+        MAIN_URL + API_URL + `/enable_disable`,
         {
           fid: id,
           enabled: checked,
@@ -84,7 +85,7 @@ function Responses() {
   const decryptInformation = (wordTextCipher) => {
     var bytes = CryptoJS.AES.decrypt(
       wordTextCipher,
-      "@DGOAE_3NCRYPT_1NF0RM4T10N"
+      ENCRYPT_STRING
     );
     var textoPlano = bytes.toString(CryptoJS.enc.Utf8);
     return textoPlano;

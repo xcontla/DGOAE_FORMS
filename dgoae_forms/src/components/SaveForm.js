@@ -2,10 +2,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-
 import { Link, useNavigate, useParams } from "react-router-dom";
 import LottieImage from "./LottieImage";
 import { ClipboardCopy } from "./ClipBoard";
+import { API_URL, APP_URL, MAIN_URL } from "../constants";
 
 const SaveForm = () => {
   const { id } = useParams();
@@ -14,7 +14,7 @@ const SaveForm = () => {
   useEffect(() => {
     async function getGlobalID() {
       var request = await axios.get(
-         `https://dgoae.digitaloe.unam.mx/apiforms/getGlobalID?id=${id}`
+         MAIN_URL + API_URL + `/getGlobalID?id=${id}`
       );
       setGlobal(request.data.gid);
       console.log(request.data);
@@ -43,7 +43,7 @@ const SaveForm = () => {
             <br />
           </p>
 
-          <ClipboardCopy copyText={window.location.origin + "/dgoaeforms/response/" + global_id}/>
+          <ClipboardCopy copyText={window.location.origin + APP_URL + "/response/" + global_id}/>
           {/* <Link to={"/response/" + global_id} style={
             {
               color: "black",

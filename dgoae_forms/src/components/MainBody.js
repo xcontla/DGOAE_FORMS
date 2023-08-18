@@ -2,14 +2,24 @@ import React, { useEffect, useState } from "react";
 import StorageIcon from "@material-ui/icons/Storage";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import contact from "../images/contact.png";
+import contact1 from "../images/contact.png";
+import contact2 from "../images/contact2.png";
+import contact3 from "../images/contact3.png";
+import contact4 from "../images/contact4.png";
+import contact5 from "../images/contact5.png";
+import contact6 from "../images/contact6.png";
+import contact7 from "../images/contact7.png";
 import "./MainBody.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import QuestionForm from "./QuestionForm";
 import Footer from "./Footer";
+import { API_URL, MAIN_URL } from "../constants";
 
+
+const contactsImages = [
+  contact1,contact2, contact3, contact4,contact5, contact6, contact7
+];
 
 function MainBody({searchForm}) {
   const { user } = useAuth0();
@@ -28,7 +38,7 @@ function MainBody({searchForm}) {
   useEffect(() => {
     async function filesnames() {
       var request = await axios.get(
-        `https://dgoae.digitaloe.unam.mx/apiforms/get_all_filenames_by_user?username=${user.name}`
+        MAIN_URL + API_URL + `/get_all_filenames_by_user?username=${user.name}`
       );
       let filenames = request.data;
       setFiles(filenames);
@@ -65,7 +75,7 @@ function MainBody({searchForm}) {
               navegate_to(element.formId);
             }}
           >
-            <img src={contact} className="doc_image" />
+            <img src={contactsImages[index%contactsImages.length]} className="doc_image" />
             <div className="doc_card_content">
               <h5 style={{ overflow: "ellipsis" }}>
                 {element.document_name}
