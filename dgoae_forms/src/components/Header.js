@@ -2,21 +2,18 @@ import React, { useEffect, useState } from "react";
 import "./Header.css";
 import { IconButton } from "@material-ui/core";
 import formimage from "../images/1.png";
-import SearchIcon from "@material-ui/icons/Search";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import AppsIcon from "@material-ui/icons/Apps";
 import { Avatar } from "@material-ui/core";
-import TemporaryDrawer from "./TemporaryDrawer";
 
 import { useAuth0 } from "@auth0/auth0-react";
 import { LogoutButton } from "../auth/Logout";
 import axios from "axios";
 import {  useNavigate } from "react-router-dom";
-import { API_URL, MAIN_URL } from "../constants";
+import { API_URL } from "../constants";
 
 function Header() {
-  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { user } = useAuth0();
   const [searchForm, setSearchForm] = useState([]);
 
   const handleChange = (e) => {
@@ -27,7 +24,7 @@ function Header() {
   useEffect(() => {
     async function filesnames() {
       var request = await axios.get(
-         MAIN_URL + API_URL + `/get_all_filenames_by_user?username=${user.name}`
+         API_URL + `/get_all_filenames_by_user?username=${user.name}`
       );
       let filenames = request.data;
 
@@ -69,6 +66,7 @@ function Header() {
             <TextField {...params} label="Buscar Formulario" />
           )}
           onChange={(event, value) => {
+            
             navegate_to(value.formId);
           }}
           

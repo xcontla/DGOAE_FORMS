@@ -8,9 +8,12 @@ import { StateProvider } from './components/StateProvider'
 import Reducer, { initialState } from './components/Reducer';import { APP_URL2 } from './constants';
 
 
+const DOMAIN = process.env.REACT_APP_DOMAIN;
+const CLIENTID = process.env.REACT_APP_CLIENTID;
+
 ReactDOM.render(
   <React.StrictMode>
-    <Auth0Provider domain='dev-w5pbf864.us.auth0.com' clientId='G1UE0TbeEBLNKDVQ02wF04jL7ybBdCZO' redirectUri={window.location.origin + APP_URL2}>
+    <Auth0Provider domain={DOMAIN} clientId={CLIENTID} redirectUri={window.location.origin + APP_URL2}>
       <StateProvider initialState={initialState} Reducer={Reducer}>
  
         <App />

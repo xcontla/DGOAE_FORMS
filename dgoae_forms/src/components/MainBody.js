@@ -14,7 +14,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import Footer from "./Footer";
-import { API_URL, MAIN_URL } from "../constants";
+import { API_URL } from "../constants";
 
 
 const contactsImages = [
@@ -38,7 +38,7 @@ function MainBody({searchForm}) {
   useEffect(() => {
     async function filesnames() {
       var request = await axios.get(
-        MAIN_URL + API_URL + `/get_all_filenames_by_user?username=${user.name}`
+        API_URL + `/get_all_filenames_by_user?username=${user.name}`
       );
       let filenames = request.data;
       setFiles(filenames);

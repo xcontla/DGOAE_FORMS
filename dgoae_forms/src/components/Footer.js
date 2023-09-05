@@ -1,8 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import unamblanco from "../images/logoUNAM.png"
-import dgoaeblanco from "../images/LogoDGOAEBlanco.png"
-import contactMainIcon from "@material-ui/icons/ContactMail";
+import unamblanco from "../images/logoUNAM.png";
+import dgoaeblanco from "../images/LogoDGOAEBlanco.png";
 
 const Footer = () => {
   return (
@@ -10,10 +9,8 @@ const Footer = () => {
       <div className="container mx-auto py-10 px-6">
         <div className="grid grid-cols-1 md:grid-cols-6 gap-10">
           <div className="col-span-3 ">
-            {/*<h2 className="text-2xl font-bold mb-4 ml-8 ">DGOAE</h2>*/}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
               <img
-                //src="https://posgrado.unam.mx/trabajosocial/wp-content/uploads/2021/05/logo-unam-png-blanco-ok.png"
                 src={unamblanco}
                 alt="UNAM"
                 className="w-40"
@@ -24,7 +21,6 @@ const Footer = () => {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
 
               <img
-                //src="https://posgrado.unam.mx/trabajosocial/wp-content/uploads/2021/05/logo-unam-png-blanco-ok.png"
                 src={dgoaeblanco}
                 alt="DGOAE"
                 className="w-40"
@@ -32,9 +28,6 @@ const Footer = () => {
             </div>
           </div>
           <div className="col-span-1">
-            {/*<h2 className="text-2xl font-bold mb-4" >Contacto</h2><contactMainIcon/>
-            <p className="text-sm ">Teléfono: 5622-0424, Fax 5616-2079</p>
-  <p className="text-sm mb-5">Email: dgoae.correspondencia@unam.mx</p>*/}
             <h2 className="text-2xl font-bold mb-4">Redes Sociales</h2>
             <div className="flex space-x-4">
               <ul className="text-sm">
@@ -75,7 +68,7 @@ const Footer = () => {
                 </a>
               </li>
               <li className="mb-2">
-                <Link to={"/contact"}>
+                <Link to={"./contact"}>
                   <a
                     href="/contact"
                     className="text-gray-400 hover:text-white transition-colors"
@@ -85,7 +78,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li className="mb-2">
-                <Link to={"/credits"}>
+                <Link to={"./credits"}>
                   <a
                     href="/credits"
                     className="text-gray-400 hover:text-white transition-colors"

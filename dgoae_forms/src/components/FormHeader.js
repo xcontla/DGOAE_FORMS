@@ -7,8 +7,6 @@ import { IconButton } from "@material-ui/core";
 import { useAuth0 } from "@auth0/auth0-react";
 import HouseIcon from "@material-ui/icons/HomeOutlined";
 import Avatar from "@material-ui/core/Avatar";
-
-//import { useStateValue } from "./StateProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import { LogoutButton } from "../auth/Logout";
 
@@ -17,8 +15,6 @@ import "./FormHeader.css";
 function FormHeader() {
   const { id } = useParams();
   const navigate = useNavigate();
-  //const [{ document_name }, dispatch] = useStateValue();
-
   const { user } = useAuth0();
 
   function navigates() {
@@ -32,7 +28,6 @@ function FormHeader() {
   return (
     <div className="form_header">
       <div className="form_header_left">
-        {/*<img src={formimage} style={{ height: "45px", width: "auto" }} />*/}
         <div className="header_info">
         <img
           src={formimage}

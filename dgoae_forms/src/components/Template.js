@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 //import { useStateValue } from "./StateProvider";
-import { API_URL, MAIN_URL } from "../constants";
+import { API_URL} from "../constants";
 
 function Template() {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ function Template() {
     ];
     try {
       const response = await axios({
-        url:  MAIN_URL + API_URL +`/add_question?username=${user.name}&doc_id=${id_}`,
+        url:  API_URL +`/add_question?username=${user.name}&doc_id=${id_}`,
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +83,7 @@ function Template() {
     ];
     try {
       const response = await axios({
-        url:  MAIN_URL + API_URL +`/add_question?username=${user.name}&doc_id=${id_}`,
+        url:  API_URL +`/add_question_encrypted?username=${user.name}&doc_id=${id_}`,
         method: "post",
         headers: {
           "Content-Type": "application/json",

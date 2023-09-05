@@ -8,6 +8,7 @@ import {
   RiPlayFill,
   RiStarFill,
 } from "react-icons/ri";
+
 import { Link, useNavigate, useParams } from "react-router-dom";
 import LottieImage from "./LottieImage";
 
@@ -20,7 +21,7 @@ const Submitted = () => {
     }
 
     const goBack = () => {
-        navigate("/response/" + global_id);
+        navigate("/responseform/" + global_id);
     }
 
   return (

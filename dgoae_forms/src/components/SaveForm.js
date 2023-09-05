@@ -39,12 +39,22 @@ const SaveForm = () => {
           </h1>
 
           <p className="text-gray-500 text-2xl leading-[2.5rem]">
+            Copia el siguiente Identificador para compartirlo:
+            <br />
+          </p>
+
+          <ClipboardCopy copyText={global_id}/>
+          
+          {/* 
+          <p className="text-gray-500 text-2xl leading-[2.5rem]">
             Copia el siguiente link para el uso del cuestionario:
             <br />
           </p>
 
+
           <ClipboardCopy copyText={window.location.origin + APP_URL + "/response/" + global_id}/>
-          {/* <Link to={"/response/" + global_id} style={
+          
+          <Link to={"/response/" + global_id} style={
             {
               color: "black",
               textDecoration: "underline",

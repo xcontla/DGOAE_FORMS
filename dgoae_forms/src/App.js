@@ -10,17 +10,30 @@ import Submitted from "./components/Submitted";
 import SaveForm from "./components/SaveForm";
 import Credits from "./pages/Credits";
 import Contact from "./pages/Contact";
-import Search from "./components/Search";
+
 import { APP_URL2 } from "./constants";
 
 
-
-
 function App() {
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated} = useAuth0();
   return (
     <div className="App">
-      {isAuthenticated ? (
+      {!isAuthenticated && 
+        (<>
+          <Router basename={APP_URL2}>
+            <Routes>
+              <Route path="/" element={<LoginButton />} />
+              <Route path="/responseform/:global_id" element={<UserForm />} />
+              <Route path="/submitted/:global_id" element={<Submitted />} />
+              <Route path="/credits" element={<Credits />} />
+              <Route path="/contact" element={<Contact />} />
+            </Routes>
+          </Router>
+        </>
+        )}
+
+
+      {isAuthenticated &&  (
         <>
           <Router basename={APP_URL2}>
             <Routes>
@@ -32,19 +45,11 @@ function App() {
               <Route path="/contact" element={<Contact />} />
             </Routes>
           </Router>
-        </>
-      ) : (
-        <>   
-        <Router basename={APP_URL2}>
-            <Routes>
-              <Route path="/" element={<LoginButton />} />
-              <Route path="/response/:global_id" element={<UserForm />} />
-              <Route path="/submitted/:global_id" element={<Submitted />} />
-              <Route path="/search" element={Search}/>
-            </Routes>
-          </Router>
-        </>
-      )}
+        </>)
+      }
+
+
+
     </div>
   );
 }

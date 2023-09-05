@@ -10,14 +10,19 @@ import Form from "../backend/models/Form.js";
 import AllAccess from "./models/AllAcces.js";
 import Response from "./models/Response.js";
 import CryptoJS from "crypto-js";
+import axios from "axios";
 
 const appback = express();
 dotenv.config();
 
-const ENCRYPT_STRING = process.env.ENCRYPT_STRING;
+const ENCRYPT_STRING =  process.env.REACT_APP_ENCRYPT_STRING;
+
 conectarDB();
+
+
 appback.use(bodyParser.json());
 appback.use(cors());
+
 appback.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*", "http://localhost:3001/*", "https://dgoae.digitaloe.unam.mx");
   res.header(
@@ -77,7 +82,7 @@ appback.get("/getform", async (req, res) => {
         document_name: form.document_name,
         document_description: form.file,
         questions: form.questions,
-        isEncrypted: form.isEncrypted,
+        isEncrypted: allAccess.isEncrypted,
       });
     } else {
       const form = await Form.findOne({ IdPregunta: allAccess.IdPregunta });
@@ -112,7 +117,7 @@ appback.post("/add_question", async (req, res) => {
   const user_id = req.query.username;
   const document_id = req.query.doc_id;
   const document_data = req.body;
-
+  
   const form = await Form.findOne({ IdPregunta: document_id });
 
   const encryptInformation = (wordTextPlain) => {
@@ -163,6 +168,8 @@ appback.post("/add_question", async (req, res) => {
     res.json(document);
   }
 
+  
+
   const allAccess = await AllAccess.findOne({ IdPregunta: document_id });
   if (!allAccess) {
     const newForm = new AllAccess({
@@ -177,11 +184,74 @@ appback.post("/add_question", async (req, res) => {
   }
 });
 
+
+appback.post("/add_question_encrypted", async (req, res) => {
+  const user_id = req.query.username;
+  const document_id = req.query.doc_id;
+  const document_data = req.body;
+  
+  const form = await Form.findOne({ IdPregunta: document_id });
+
+  const encryptInformation = (wordTextPlain) => {
+    var textoCifrado = CryptoJS.AES.encrypt(
+      JSON.stringify(wordTextPlain),
+      ENCRYPT_STRING
+    );
+    return textoCifrado.toString();
+  };
+
+  if (!form) {
+    const document = new Form({
+      email: user_id,
+      IdPregunta: document_id,
+      document_name: document_data.document_name,
+      document_description: document_data.document_description,
+      isEncrypted: document_data.isEncrypted,
+      questions: document_data.questions,
+    });
+    await document.save();
+    res.json(document);
+  } else {
+    const document = new Form({
+      email: form.email,
+      IdPregunta: form.IdPregunta,
+      document_name: document_data.document_name,
+      document_description: document_data.document_description,
+      isEncrypted: document_data.isEncrypted,
+
+      questions: document_data.questions,
+    });
+    await form.updateOne({
+      document_name: document_data.document_name,
+      document_description: document_data.document_description,
+      isEncrypted: document_data.isEncrypted,
+      questions: document_data.questions,
+    });
+    res.json(document);
+  }
+
+  
+
+  const allAccess = await AllAccess.findOne({ IdPregunta: document_id });
+  if (!allAccess) {
+    const newForm = new AllAccess({
+      email: user_id,
+      gid: uuidv4(),
+      IdPregunta: document_id,
+      enable: false,
+      isEncrypted: true,
+      IdRespuesta: uuidv4(),
+    });
+    await newForm.save();
+  }
+});
+
 appback.post("/remove_form", async (req, res) => {
 
   const user_id = req.query.username;
   const document_id = req.query.doc_id;
  
+  await AllAccess.deleteOne({ IdPregunta: document_id });
   await Form.deleteOne({ IdPregunta: document_id });
 
    const jsonres = { message:  "Usuario:" + user_id + " borró el formulario " + document_id };
@@ -273,7 +343,7 @@ appback.post(`/enable_disable`, async (req, res) => {
   var fid = docs_data.fid;
   var isEnabled = docs_data.enabled;
 
-  var filenameAll = `allaccess.json`;
+/*  var filenameAll = `allaccess.json`;
   const diretoryPath = path.join(__dirname, "/files/");
 
   let accessfile = JSON.parse(fs.readFileSync(diretoryPath + filenameAll));
@@ -283,11 +353,35 @@ appback.post(`/enable_disable`, async (req, res) => {
     }
   });
 
+
   let jsondata = JSON.stringify(accessfile);
   fs.writeFileSync(diretoryPath + filenameAll, jsondata);
-  res.send();
+  res.send();*/
+  res.send(null);
 });
 
+
+appback.post(`/hasCryptedInfo`, async (req, res) => {
+  var docs_data = req.body;
+  var fid = docs_data.fid;
+  console.log(docs_data);
+  try {
+    const result = await AllAccess.findOne({ file: fid });
+    
+    if (!result) {
+      return res.json({message: "Not Found record"});
+    }
+    
+  console.log(result);
+    res.json({ isEncrypted: result.isEncrypted });
+    
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+
+  
+});
 
 
 appback.get(`/getResponses`, async (req, res) => {
@@ -348,6 +442,29 @@ appback.get(`/getFormData`, async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+  }
+});
+
+appback.post("/verify-token", async (req,res) => {
+  console.log(req.body);
+  const { reCAPTCHA_TOKEN, Secret_Key} = req.body;
+
+  try {
+    let response = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${Secret_Key}&response=${reCAPTCHA_TOKEN}`);
+    console.log(response.data);
+
+    return res.status(200).json({
+      success:true,
+      message: "Token successfully verified",
+      verification_info: response.data
+    });
+  } catch(error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success:false,
+      message: "Error verifying token"
+    })
   }
 });
 

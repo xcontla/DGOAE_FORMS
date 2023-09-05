@@ -2,15 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, Typography } from "@material-ui/core";
 import { useNavigate, useParams } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
-import {API_URL, MAIN_URL} from '../constants';
+import { API_URL } from '../constants';
+import axios from "axios";
+import Footer from "./Footer"
 
 import CryptoJS from "crypto-js";
 
 import "./UserForm.css";
 
-import axios from "axios";
 
-function UserForm() {
+export const UserForm = () => {
   const { global_id } = useParams();
 
   var [quest_excel, setColumn] = useState([]);
@@ -19,12 +20,18 @@ function UserForm() {
 
   const [doc_name, setDocName] = useState("Documento Sin título");
   const [doc_desc, setDocDesc] = useState("Agrega una descripción");
+  const [SuccessMsg, setSuccessMsg] = useState("")
+  const [ErrorMsg, setErrorMsg] = useState("")
+  const [valid_token, setValidToken] = useState([]);
   const [captchaVerification, setcaptchaVerification] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [isEncrypted, setIsEncrypted] = useState({});
   //const [isEnabled, setisEnabled] = useState(null);
-  const ENCRYPT_STRING = process.env.SECRET_KEY;
+  const ENCRYPT_STRING = process.env.REACT_APP_ENCRIPT_KEY;
+  const RECAPTCHA_SITE_KEY = process.env.REACT_APP_SITE_KEY;
+  const RECAPTCHA_SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
 
+  console.log(ENCRYPT_STRING, RECAPTCHA_SITE_KEY);
   const encryptInformation = (wordTextPlain) => {
     var textoCifrado = CryptoJS.AES.encrypt(
       JSON.stringify(wordTextPlain),
@@ -35,18 +42,53 @@ function UserForm() {
 
   const captcha = useRef(null);
 
-  const onChange = () => {
-    if (captcha.current.getValue()) {
-      setcaptchaVerification(true);
+  const onChange = async (e) => {
+
+    let token = captcha.current.getValue();
+    captcha.current.reset();
+
+    if (token) {
+      let new_valid_token = await verifyToken(token);
+      console.log("Valid token? ");
+      console.log(new_valid_token);
+      setValidToken([new_valid_token[0]]);
+
+
+      if (new_valid_token[0].verification_info.success === true) {
+        console.log("verified");
+        setSuccessMsg("Hurray!! you have submitted the form")
+        setcaptchaVerification(new_valid_token[0].verification_info.success);
+      } else {
+        console.log("not verified");
+        setErrorMsg(" Sorry!! Verify you are not a bot")
+        setcaptchaVerification(new_valid_token[0].verification_info.success);
+      }
+    }
+  };
+
+  const verifyToken = async (token) => {
+    console.log("TOKEEEEN: " + token);
+    let APIResponse = [];
+
+    try {
+      let response = await axios.post(API_URL + `/verify-token`, {
+        reCAPTCHA_TOKEN: token,
+        Secret_Key: RECAPTCHA_SECRET_KEY,
+      });
+
+      APIResponse.push(response['data']);
+      return APIResponse;
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
     async function getForm() {
       var request = await axios.get(
-        MAIN_URL + API_URL + `/getform?global_id=${global_id}`
+        API_URL + `/getform?global_id=${global_id}`
       );
-      console.log(request.data.questions);
+      console.log(request.data);
       var question_data = request.data.questions;
       var doc_name = request.data.document_name;
       var doc_desc = request.data.document_description;
@@ -55,7 +97,7 @@ function UserForm() {
       question_data.map((q, qindex) => {
         answer.push({
           question: q.questionText,
-          answer: " ",
+          answer: "",
         });
       });
 
@@ -115,28 +157,8 @@ function UserForm() {
 
 
   function submit() {
-    // questions.map((ele) => {
-    //   if (ele.required === true) {
-    //     var k = answer.findIndex((el) => el.question === ele.questionText);
-    //     if (k === -1 || answer[k].answer.trim() === "") {
-    //       alert("Preguntas no respondidas");
-    //     } else {
-    //       axios
-    //         .post(`http://localhost:9000/student_response`, {
-    //           global_id: global_id,
-    //           column: quest_excel,
-    //           doc_name: doc_name,
-    //           answer_data: [post_answer_data],
-    //         })
-    //         .then(() => {
-    //           navigate("/submitted/" + global_id);
-    //         })
-    //         .catch((error) => {
-    //           console.error("Error al enviar la respuesta:", error);
-    //         });
-    //     }
-    //   }
-    // });
+  console.log(isEncrypted);
+  console.log(post_answer_data);
 
     answer.map((ele) => {
       if (isEncrypted === true) {
@@ -144,15 +166,43 @@ function UserForm() {
       } else {
         post_answer_data[ele.question] = ele.answer;
       }
+
+
     });
 
-    axios.post( MAIN_URL + API_URL +`/student_response`, {
+    axios.post(API_URL + `/student_response`, {
       global_id: global_id,
       column: quest_excel,
       doc_name: doc_name,
       answer_data: [post_answer_data],
     });
     navigate("/submitted/" + global_id);
+
+
+
+    /*questions.map((ele) => {
+     
+      if (ele.required === true) {
+        var k = answer.findIndex((el) => el.question === ele.questionText);
+        if (k === -1 || answer[k].answer.trim() === "") {
+          alert("Hay preguntas que debes de responder, son requeridas para el formulario");
+        } else {
+           console.log("Respuestas Enviando Respuestas");
+          axios.post(API_URL +`/student_response`, {
+              global_id: global_id,
+              column: quest_excel,
+              doc_name: doc_name,
+              answer_data: [post_answer_data],
+            })
+            .then(() => {
+              navigate("/submitted/" + global_id);
+            })
+            .catch((error) => {
+              console.error("Error al enviar la respuesta:", error);
+            });
+        }
+      }
+   });*/
   }
 
   return (
@@ -276,12 +326,11 @@ function UserForm() {
             </div>
           )}
 
-          {}
-
           <div className="recaptcha">
             <ReCAPTCHA
               ref={captcha}
-              sitekey="6LczbcwmAAAAAIrxDQ9f4j-Il98VaYtEBIG60AxL"
+              sitekey={RECAPTCHA_SITE_KEY}
+
               onChange={onChange}
             />
           </div>
@@ -297,20 +346,11 @@ function UserForm() {
               Guardar respuesta
             </Button>
 
-            {/* {captchaVerification ? (
-              <Button
-                disabled = {captchaVerification}
-                variant="contained"
-                color="primary"
-                onClick={submit}
-                style={{ fontSize: "14px" }}
-              >
-                Guardar respuesta
-              </Button>
-            ) : null} */}
           </div>
 
-          <div className="user_footer">DGOAE-FORMS</div>
+          <div className="footer">
+            <Footer />
+          </div>
         </div>
       </div>
     </div>
