@@ -42,6 +42,7 @@ const SaveForm = () => {
 
           <p className="text-gray-500 text-2xl leading-[2.5rem]">
             Copia el siguiente Identificador para compartirlo:
+
             <br />
           </p>
 

@@ -969,7 +969,6 @@ appback.post(`/enable_disable`, async (req, res) => {
   res.send(null);
 });
 
-
 appback.post(`/hasCryptedInfo`, async (req, res) => {
   var docs_data = req.body;
   var fid = docs_data.fid;
@@ -985,7 +984,6 @@ appback.post(`/hasCryptedInfo`, async (req, res) => {
     res.status(500).send({ error: "Internal Server Error" });
   }
 
-  
 });
 
 
@@ -1051,6 +1049,7 @@ appback.post("/verify-token", async (req,res) => {
 
   try {
     let response = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${Secret_Key}&response=${reCAPTCHA_TOKEN}`);
+
     return res.status(200).json({
       success:true,
       message: "Token successfully verified",

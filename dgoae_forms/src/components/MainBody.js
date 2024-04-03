@@ -17,6 +17,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Footer from "./Footer";
 import { API_URL } from "../constants";
 
+
 const contactsImages = [
   contact1, contact2, contact3, contact4, contact5, contact6, contact7
 ];
@@ -156,7 +157,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import Footer from "./Footer";
 import { API_URL } from "../constants";
-
 
 const contactsImages = [
   contact1,contact2, contact3, contact4,contact5, contact6, contact7

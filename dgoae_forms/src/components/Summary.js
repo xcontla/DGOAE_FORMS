@@ -10,10 +10,9 @@ import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { API_URL } from '../constants';
 import CryptoJS from "crypto-js";
+
 import { useAuth0 } from "@auth0/auth0-react";
 import Footer from "./Footer";
-
-
 
 function Summary() {
 
@@ -29,6 +28,7 @@ function Summary() {
     var navigate = useNavigate();
 
     const ENCRYPT_STRING = process.env.REACT_APP_ENCRIPT_KEY;
+
     const [token, setToken] = useState("");
 
     function getConfigHeader(_token) {
@@ -38,6 +38,24 @@ function Summary() {
             }
         };
     }
+    const decryptInformation = (wordTextCipher) => {
+    
+    
+        if(!isCripted)
+        return wordTextCipher;
+      
+        console.log("Decrypt: " +  wordTextCipher);
+        
+        var bytes = CryptoJS.AES.decrypt(
+          wordTextCipher,
+          ENCRYPT_STRING
+        );
+    
+    
+        var textoPlano = bytes.toString(CryptoJS.enc.Utf8);
+        console.log("Decrypt: " +  textoPlano);
+        return textoPlano;
+      };
 
     useEffect(() => {
         async function getToken() {
@@ -49,8 +67,8 @@ function Summary() {
     }, [token]);
 
 
-    const decryptInformation = (wordTextCipher) => {
 
+    const decryptInformation = (wordTextCipher) => {
 
         if (!isCripted)
             return wordTextCipher;
@@ -83,6 +101,7 @@ function Summary() {
             console.log("Quest: ", questions);*/
           
             isCripted = request.data.isEncrypted;
+
             setCripted(isCripted);
             setResponses(responses);
             setRSize(rsize);
@@ -107,11 +126,23 @@ function Summary() {
     }
 
 
+    const decryptValues = ( obj) => {
+        let resp = {}
+        for (const key in obj) {
+            if(obj.hasOwnProperty(key)){
+                resp[key] = decryptInformation(obj[key]);
+            }
+        }
+        return resp;
+    } 
+    
+
     async function descargaExcel() {
 
         const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
         const fileExtension = '.xlsx';
         let info = [];
+
         console.log(responses);
         if (isCripted) {
            console.log("Info_____");
@@ -121,6 +152,7 @@ function Summary() {
             info = responses;
         }
         console.log("Info", info);
+
         const ws = XLSX.utils.json_to_sheet(info);
         const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });

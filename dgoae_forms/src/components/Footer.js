@@ -26,6 +26,7 @@ const Footer = () => {
                  target="_blank"
                className="text-gray-400 hover:text-white transition-colors">
                   Aviso de Privacidad
+
               </a>
              </li>
              <li className="mb-2">
@@ -36,6 +37,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li className="mb-2">
+
                 <Link to={"/creditos"}className="text-gray-400 hover:text-white transition-colors">
                   
                    

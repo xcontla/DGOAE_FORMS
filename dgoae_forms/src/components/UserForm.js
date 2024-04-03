@@ -373,9 +373,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { API_URL } from '../constants';
 import axios from "axios";
 import Footer from "./Footer"
-
 import CryptoJS from "crypto-js";
-
 import "./UserForm.css";
 
 
@@ -547,8 +545,8 @@ export const UserForm = () => {
 
 
 
+
     questions.map((ele) => {
-     
       if (ele.required === true) {
         var k = answer.findIndex((el) => el.question === ele.questionText);
         if (k === -1 || answer[k].answer.trim() === "") {
@@ -569,6 +567,7 @@ export const UserForm = () => {
             });
         }
       }
+
    });
   }
 

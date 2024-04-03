@@ -32,12 +32,14 @@ import ShortText from "@material-ui/icons/ShortText";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { API_URL, MAX_OPCIONES } from "../constants";
+
 import Footer from "./Footer";
 
 function QuestionForm() {
 
   const { id } = useParams();
   const [{ }, dispatch] = useStateValue();
+
   const { user, getIdTokenClaims } = useAuth0();
 
   function getConfigHeader(_token) {
@@ -82,7 +84,6 @@ function QuestionForm() {
 
   useEffect(() => {
     async function data_adding() {
-
 
       if (token) {
         var request = await axios.get(
@@ -340,7 +341,6 @@ function QuestionForm() {
   };
 
   async function commitToDB() {
-
     dispatch({
       type: actionTypes.SET_QUESTIONS,
       questions: questions,
@@ -352,6 +352,7 @@ function QuestionForm() {
     });
 
     try {
+      console.log(API_URL + `/add_question?username=${user.name}&doc_id=${id}`);
       const response = await axios.post(
         API_URL + `/add_question?username=${user.name}&doc_id=${id}`,
         {
@@ -378,7 +379,9 @@ function QuestionForm() {
 
     try {
       const response = await axios.post(
+
         API_URL + `/remove_form?username=${user.name}&doc_id=${id}`, {}, getConfigHeader(token)
+
       );
     } catch (err) {
       console.log(err);
@@ -772,6 +775,7 @@ function QuestionForm() {
                                               name={ques.questionText}
                                               className="form-check-input"
                                               required={ques.required}
+
                                               checked={questions[i].answerkey === op.optionText}
                                               style={{
                                                 marginRight: "10px",
@@ -806,8 +810,6 @@ function QuestionForm() {
                                       fontSize: "20px",
                                       marginRight: "8px",
                                     }}
-
-
                                   >
                                     Agrega un retroalimentación a la respuesta
                                   </BsFileText> {questions[i].answer}
@@ -827,7 +829,7 @@ function QuestionForm() {
                                   onClick={() => {
                                     doneAnswer(i);
                                   }}
-                                >
+                                > 
                                   Hecho
                                 </Button>
                               </div>

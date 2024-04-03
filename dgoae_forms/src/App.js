@@ -11,6 +11,7 @@ import SaveForm from "./components/SaveForm";
 import Credits from "./pages/Credits";
 import Contact from "./pages/Contact";
 
+
 import { APP_URL2 } from "./constants";
 
 
@@ -19,12 +20,11 @@ function App() {
   const { 
     isAuthenticated} = useAuth0();
 
-
   return (
     <div className="App">
       {!isAuthenticated && 
         (<>
-         
+
             <Routes>
               <Route path="/" element={<LoginButton />} />
               <Route path="/responseform/:global_id" element={<UserForm />} />
@@ -46,6 +46,7 @@ function App() {
               <Route path="/credits" element={<Credits />} />
               <Route path="/contact" element={<Contact />} />
             </Routes>
+
         </>)
       }
 

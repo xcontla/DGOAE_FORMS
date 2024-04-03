@@ -323,6 +323,15 @@ function Responses() {
     async function getReponses() {
       var request = await axios.get(
         API_URL + `/getResponses?id=${id}`
+
+      );
+
+      var cripted = await axios.post(
+        API_URL + `/hasCryptedInfo`,
+        {
+          fid: id
+        }
+
       );
 
       var cripted = await axios.post(
@@ -332,6 +341,9 @@ function Responses() {
         }
       );
 
+      console.log(request.data.resp);
+
+      console.log(cripted.data);
       responses = request.data.resp;
 
       rsize = request.data.rsize;
@@ -395,7 +407,9 @@ function Responses() {
     
     
     if(!isCripted)
+
     return wordTextCipher;    
+
     var bytes = CryptoJS.AES.decrypt(
       wordTextCipher,
       ENCRYPT_STRING
@@ -403,6 +417,7 @@ function Responses() {
 
 
     var textoPlano = bytes.toString(CryptoJS.enc.Utf8);
+    console.log("Decrypt: " +  textoPlano);
     return textoPlano;
   };
 
@@ -545,6 +560,8 @@ function Responses() {
   );
 }
 
+
 export default Responses;
 
 */
+

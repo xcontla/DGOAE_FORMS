@@ -42,7 +42,6 @@ function Template() {
     ];
     try {
       const response = await axios({
-
         url:  API_URL +`/add_question?username=${user.name}&doc_id=${id_}`,  
         method: "post",
         headers: {
