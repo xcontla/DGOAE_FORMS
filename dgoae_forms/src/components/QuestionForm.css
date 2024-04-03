@@ -1,3 +1,5 @@
+
+
  .question_form{
     background-color: #f4f4f9;
     height: 100%;
@@ -97,7 +99,7 @@
 
 .select{
     height: 40px;
-    width: 230px;
+    width: 80%;
     border: 0.5px solid;
     padding: 5px 15px;
     color: black;
@@ -115,6 +117,7 @@
 .add_question_body{
     display: flex;
     align-items: center;
+    flex-direction: row;
 }
 
 .add_question_body:hover{
@@ -203,110 +206,3 @@ justify-content: space-between;
 
 }
 
-
-
- 
-
- /* Estilos base */
-/* Estilos base */
-/* .question_form {
-    background-color: #f4f4f9;
-    padding-bottom: 30px;
-}
-
-.section {
-    margin: auto;
-    width: 90%;
-    max-width: 800px;
-}
-
-.question_form_top {
-    background-color: white;
-    border-top: 8px solid rgb(103, 58, 183);
-    border-radius: 8px;
-    padding: 30px 25px;
-    text-transform: capitalize;
-}
-
-.question_form_top_name {
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 30px;
-    width: 100%;
-    border: none;
-    outline: none;
-    border-bottom: 1px solid #f4f4f9;
-    color: black;
-    height: 35px;
-}
-
-.question_form_top_desc {
-    box-sizing: border-box;
-    margin-top: 10px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 20px;
-    width: 100%;
-    border: none;
-    outline: none;
-    border-bottom: 1px solid #f4f4f9;
-    color: black;
-    height: 20px;
-}
-
-.question_boxes {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.add_question {
-    background-color: white;
-    border-radius: 8px;
-    padding: 25px 22px;
-    text-transform: capitalize;
-    display: flex;
-    flex-direction: column;
-    padding-top: 0px;
-    width: 100%;
-    margin: 10px 0;
-}
-
-.add_question_top {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.question {
-    box-sizing: border-box;
-    margin-top: 10px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    flex: 1;
-    line-height: 30px;
-    border: none;
-    outline: none;
-    color: black;
-    height: 40px;
-    margin-right: 10px;
-    line-height: 10px;
-    padding: 10px;
-}
-
-.question:focus {
-    border-bottom: 1px solid rgba(104, 58, 183, 0.568);
-    background-color: #f4f4f9;
-}
-
-.select {
-    height: 40px;
-    width: 100%;
-    max-width: 230px;
-    border: 0.5px solid;
-    padding: 5px 15px} */

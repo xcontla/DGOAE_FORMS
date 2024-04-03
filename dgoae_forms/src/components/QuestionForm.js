@@ -1,3 +1,4 @@
+
 import react, { useEffect, useState } from "react";
 import axios from "axios";
 import CryptoJS from "crypto-js";
@@ -10,7 +11,7 @@ import Select from "@material-ui/core/Select";
 import Switch from "@material-ui/core/Switch";
 import CheckboxIcon from "@material-ui/icons/CheckBox";
 import SubjectIcon from "@material-ui/icons/Subject";
-import { BsTrash, BsFileText} from "react-icons/bs";
+import { BsTrash, BsFileText } from "react-icons/bs";
 import { IconButton, MenuItem, Typography } from "@material-ui/core";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
@@ -30,19 +31,41 @@ import "./QuestionForm.css";
 import ShortText from "@material-ui/icons/ShortText";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
-import {API_URL, MAIN_URL, MAX_OPCIONES} from "../constants";
+import { API_URL, MAX_OPCIONES } from "../constants";
+import Footer from "./Footer";
 
 function QuestionForm() {
 
   const { id } = useParams();
-  const [{}, dispatch] = useStateValue();
-  const { user } = useAuth0();
+  const [{ }, dispatch] = useStateValue();
+  const { user, getIdTokenClaims } = useAuth0();
 
-  const ENCRYPT_STRING = process.env.SECRET_KEY;
+  function getConfigHeader(_token) {
+    return {
+      headers: {
+        dgoaetoken: _token
+      }
+    };
+  }
+
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    async function getToken() {
+      const t = await getIdTokenClaims()
+      setToken(t.__raw);
+      localStorage.setItem('token', t.__raw);
+    };
+    getToken();
+  }, [token]);
+
+  const ENCRYPT_STRING = process.env.REACT_APP_ENCRIPT_KEY;
 
   const navigate = useNavigate();
   const [isEncrypt, setIsEncrypt] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
+  const [document_name, setDocName] = useState("Documento sin título");
+  const [document_description, setDocDesc] = useState("Agrega una descripción");
   const [questions, setQuestions] = useState([
     {
       questionText: "Pregunta",
@@ -56,46 +79,50 @@ function QuestionForm() {
     },
   ]);
 
-  const [documentName, setDocName] = useState("Documento sin título");
-  const [documentDescription, setDocDesc] = useState("Agrega una descripción");
 
   useEffect(() => {
     async function data_adding() {
-      var request = await axios.get(
-        MAIN_URL + API_URL + `/data?username=${user.name}&doc_id=${id}`
-      );
-      var question_data = request.data.questions;
 
-      var doc_name = request.data.document_name;
-      var doc_desc = request.data.document_description;
-      var isEncrypt = request.data.isEncrypted;
-      setDocName(doc_name);
-      setDocDesc(doc_desc);
-      setQuestions(question_data);
-      setIsEncrypt(isEncrypt);
 
-      dispatch({
-        type: actionTypes.SET_DOC_NAME,
-        document_name: doc_name,
-      });
+      if (token) {
+        var request = await axios.get(
+          API_URL + `/data?username=${user.name}&doc_id=${id}`, getConfigHeader(token)
+        );
 
-      dispatch({
-        type: actionTypes.SET_DOC_DESC,
-        document_description: doc_desc,
-      });
+        console.log(request.data);
+        var question_data = request.data.formdata.questions;
 
-      dispatch({
-        type: actionTypes.SET_QUESTIONS,
-        questions: question_data,
-      });
-      dispatch({
-        type: actionTypes.SET_DOC_ENCRYPT,
-        isEncrypted: isEncrypt,
-      });
+        var doc_name = request.data.formdata.document_name;
+        var doc_desc = request.data.formdata.document_description;
+        var isEncrypt = request.data.isEncrypted;
+        setDocName(doc_name);
+        setDocDesc(doc_desc);
+        setQuestions(question_data);
+        setIsEncrypt(isEncrypt);
+
+        dispatch({
+          type: actionTypes.SET_DOC_NAME,
+          document_name: doc_name,
+        });
+
+        dispatch({
+          type: actionTypes.SET_DOC_DESC,
+          document_description: doc_desc,
+        });
+
+        dispatch({
+          type: actionTypes.SET_QUESTIONS,
+          questions: question_data,
+        });
+        dispatch({
+          type: actionTypes.SET_DOC_ENCRYPT,
+          isEncrypted: isEncrypt,
+        });
+      }
     }
 
     data_adding();
-  }, []);
+  }, [token]);
 
   const encryptInformation = (wordTextPlain) => {
     var textoCifrado = CryptoJS.AES.encrypt(
@@ -240,24 +267,24 @@ function QuestionForm() {
     var qs = [...questions];
     console.log(
       "Antes" +
-        i +
-        " " +
-        qs[i].answer +
-        " " +
-        qs[i].answerkey +
-        " " +
-        qs[i].points
+      i +
+      " " +
+      qs[i].answer +
+      " " +
+      qs[i].answerkey +
+      " " +
+      qs[i].points
     );
     qs[i].answerkey = ans;
     console.log(
       "Después" +
-        i +
-        " " +
-        qs[i].answer +
-        " " +
-        qs[i].answerkey +
-        " " +
-        qs[i].points
+      i +
+      " " +
+      qs[i].answer +
+      " " +
+      qs[i].answerkey +
+      " " +
+      qs[i].points
     );
     setQuestions(qs);
   }
@@ -266,25 +293,25 @@ function QuestionForm() {
     var qs = [...questions];
     console.log(
       "Antes" +
-        i +
-        " " +
-        qs[i].answer +
-        " " +
-        qs[i].answerkey +
-        " " +
-        qs[i].points
+      i +
+      " " +
+      qs[i].answer +
+      " " +
+      qs[i].answerkey +
+      " " +
+      qs[i].points
     );
     qs[i].points = points;
 
     console.log(
       "Después" +
-        i +
-        " " +
-        qs[i].answer +
-        " " +
-        qs[i].answerkey +
-        " " +
-        qs[i].points
+      i +
+      " " +
+      qs[i].answer +
+      " " +
+      qs[i].answerkey +
+      " " +
+      qs[i].points
     );
     setQuestions(qs);
   }
@@ -313,6 +340,7 @@ function QuestionForm() {
   };
 
   async function commitToDB() {
+
     dispatch({
       type: actionTypes.SET_QUESTIONS,
       questions: questions,
@@ -325,13 +353,13 @@ function QuestionForm() {
 
     try {
       const response = await axios.post(
-         MAIN_URL + API_URL + `add_question?username=${user.name}&doc_id=${id}`,
+        API_URL + `/add_question?username=${user.name}&doc_id=${id}`,
         {
-          document_name: documentName,
-          document_description: documentDescription,
+          document_name: document_name,
+          document_description: document_description,
           questions: questions,
           isEncrypted: isEncrypt,
-        }
+        }, getConfigHeader(token)
       );
     } catch (err) {
       console.log(err);
@@ -346,11 +374,11 @@ function QuestionForm() {
 
   async function removeForm() {
 
-    console.log("Borraremos el formulario: " + {id});
-      
+    console.log("Borraremos el formulario: " + { id });
+
     try {
       const response = await axios.post(
-         MAIN_URL + API_URL + `/remove_form?username=${user.name}&doc_id=${id}`,{}
+        API_URL + `/remove_form?username=${user.name}&doc_id=${id}`, {}, getConfigHeader(token)
       );
     } catch (err) {
       console.log(err);
@@ -474,15 +502,12 @@ function QuestionForm() {
                               <input
                                 type="text"
                                 className="question"
-                                placeholder='Escribe una respuesta' 
+                                placeholder='Escribe una respuesta'
                                 value={ques.questionText}
                                 onChange={(e) =>
                                   changeQuestion(e.target.value, i)
                                 }
                               ></input>
-                              {/*<CropOriginalIcon
-                                style={{ color: "#5f6368", fontSize: "13px" }}
-                              />*/}
                               <Select
                                 className="select"
                                 style={{ color: "#5f6368" }}
@@ -564,7 +589,7 @@ function QuestionForm() {
                                     }
                                   ></input>
                                 </div>
-                               
+
                                 <IconButton
                                   style={{
                                     color: "#5f6368",
@@ -582,7 +607,7 @@ function QuestionForm() {
                             ))}
 
                             {ques.options.length < MAX_OPCIONES &&
-                            ques.questionType !== "text" ? (
+                              ques.questionType !== "text" ? (
                               <div className="add_question_body">
                                 <FormControlLabel
                                   disabled
@@ -608,7 +633,7 @@ function QuestionForm() {
                                   }
                                   label={
                                     <div>
-                                
+
                                       <Button
                                         size="small"
                                         style={{
@@ -655,9 +680,9 @@ function QuestionForm() {
                                   Hoja de respuestas
                                 </Button>
                               </div>
-                              <div className="add_question_bottom"> 
+                              <div className="add_question_bottom">
                                 <IconButton
-                                 title="Copiar Pregunta"
+                                  title="Copiar Pregunta"
                                   aria-label="Copy"
                                   onClick={() => {
                                     copyQuestion(i);
@@ -666,7 +691,7 @@ function QuestionForm() {
                                   <FilterNoneIcon />
                                 </IconButton>
                                 <IconButton
-                                 title="Borrar Pregunta"
+                                  title="Borrar Pregunta"
                                   arial-label="Delete"
                                   onClick={() => {
                                     deleteQuestion(i);
@@ -689,7 +714,7 @@ function QuestionForm() {
                                   label="Requerido"
                                   title="Pregunta Obligatoria"
                                 />
-                               
+
                               </div>
                             </div>
                           </AccordionDetails>
@@ -747,6 +772,7 @@ function QuestionForm() {
                                               name={ques.questionText}
                                               className="form-check-input"
                                               required={ques.required}
+                                              checked={questions[i].answerkey === op.optionText}
                                               style={{
                                                 marginRight: "10px",
                                                 marginBottom: "10px",
@@ -780,9 +806,11 @@ function QuestionForm() {
                                       fontSize: "20px",
                                       marginRight: "8px",
                                     }}
+
+
                                   >
                                     Agrega un retroalimentación a la respuesta
-                                  </BsFileText>
+                                  </BsFileText> {questions[i].answer}
                                 </Button>
                               </div>
                               <div className="add_question_bottom">
@@ -840,7 +868,7 @@ function QuestionForm() {
                   className="question_form_top_name"
                   style={{ color: "black" }}
                   placeholder="Documento Sin Título"
-                  value={documentName}
+                  value={document_name}
                   onChange={(e) => {
                     setDocName(e.target.value);
                   }}
@@ -858,15 +886,15 @@ function QuestionForm() {
                   label="El formulario contiene datos sensibles"
                 />
               </div>
-              <input
+              <textarea
                 type="text"
                 className="question_form_top_desc"
                 placeholder="Descripción del formulario"
-                value={documentDescription}
+                value={document_description}
                 onChange={(e) => {
                   setDocDesc(e.target.value);
                 }}
-              ></input>
+              ></textarea>
             </div>
           </div>
 
@@ -891,22 +919,29 @@ function QuestionForm() {
             >
               Guardar formulario
             </Button>
-            { <Button
+            {<Button
               variant="contained"
               color="secondary"
               size="large"
-              onClick={ () => { if (window.confirm('¿Quieres borrar el formulario?')){ removeForm() }}}
+              onClick={() => { if (window.confirm('¿Quieres borrar el formulario?')) { removeForm() } }}
               startIcon={<BsTrash />}
             >
               Borrar Formulario
-            </Button> }
+            </Button>}
           </div>
           <br></br>
           <hr />
         </div>
+      </div>
+
+      <div className="footer">
+        <Footer />
       </div>
     </div>
   );
 }
 
 export default QuestionForm;
+
+
+

@@ -5,6 +5,25 @@
     padding: 20px;
 }
 
+.user_form_column_left {
+    float: left;
+    /*width: 33.33%;*/
+    padding: 5px;
+  }
+
+  .user_form_column_right {
+    float: right;
+    /*width: 33.33%;*/
+    padding: 5px;
+  }
+  
+  /* Clearfix (clear floats) */
+  .user_form_row::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
 .submit {
 
     background-color: #F4F4F9;
@@ -13,7 +32,7 @@
 
 .user_form_section {
     margin: auto;
-    width: 44%;
+    width: 60%;
     display: flex;
     flex-direction: column;
 
@@ -21,10 +40,10 @@
 
 .user_title_section {
     background-color: white;
-    border-top: 8px solid rgb(103, 58, 183);
+    border-top: 8px solid rgb(8, 6, 126);
     border-radius: 8px;
     padding: 15px 25px;
-    text-transform: capitalize;
+    /*text-transform: uppercase;*/
     margin-bottom: 8px;
 }
 
@@ -33,7 +52,6 @@
 
     border-radius: 8px;
     padding: 30px 25px;
-    /* text-transform: capitalize; */
     text-align: left;
 
     margin-bottom: 8px;
@@ -66,5 +84,7 @@
 
 
 .form_check_input_text {
-    width: 200px;
+    width: 300px;
+    background-color: #e1e4f5;
+
 }

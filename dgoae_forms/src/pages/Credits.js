@@ -16,9 +16,6 @@ const Credits = () => {
               </div>
               <div className="flex">
                 <div className="w-full">
-                  <h2 className="text-blue-700 text-center">
-                    Portal de Orientación Educativa
-                  </h2>
                 </div>
               </div>
               <div className="flex">
@@ -27,8 +24,9 @@ const Credits = () => {
                   <h3 className="text-center text-blue-700">
                     Universidad Nacional Autónoma de México
                   </h3>
+	          <h5 className="text-center text-blue-900">Rector</h5>
                   <h4 className="text-center">Dr. Enrique Graue Wiechers</h4>
-                  <h5 className="text-center text-blue-900">Rector</h5>
+                
                   <hr className="my-4" />
                   <h5 className="text-center text-blue-900">
                     Secretaria de Atención a la Comunidad
