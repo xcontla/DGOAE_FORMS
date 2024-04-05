@@ -26,7 +26,7 @@ ReactDOM.render(
         <App />
 
       </StateProvider>
-
+    </Auth0Provider>
     
 
   </Router>,

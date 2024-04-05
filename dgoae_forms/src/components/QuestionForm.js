@@ -64,7 +64,7 @@ function QuestionForm() {
   const ENCRYPT_STRING = process.env.REACT_APP_ENCRIPT_KEY;
 
   const navigate = useNavigate();
-  const [isEncrypt, setIsEncrypt] = useState(false);
+  const [isEncrypt, setIsEncrypt] = useState(true);
   const [isRequired, setIsRequired] = useState(false);
   const [document_name, setDocName] = useState("Documento sin título");
   const [document_description, setDocDesc] = useState("Agrega una descripción");

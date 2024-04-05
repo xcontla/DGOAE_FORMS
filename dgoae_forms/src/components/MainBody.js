@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import StorageIcon from "@material-ui/icons/Storage";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import contact1 from "../images/contact.png";
 import contact2 from "../images/contact2.png";
 import contact3 from "../images/contact3.png";
@@ -62,12 +64,24 @@ function MainBody({ searchForm }) {
           API_URL + `/get_all_filenames_by_user?username=${user.name}`, getConfigHeader(token)
         );
         let filenames = request.data;
+        console.log(filenames);
         setFiles(filenames);
       }
 
     }
     filesnames();
   }, [token]);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+
 
   return (
     <div>
@@ -93,11 +107,11 @@ function MainBody({ searchForm }) {
             <div
               key={index}
               className="doc_cards"
+            >
+              <img src={contactsImages[index % contactsImages.length]} className="doc_image"               
               onClick={() => {
                 navegate_to(element.formId);
-              }}
-            >
-              <img src={contactsImages[index % contactsImages.length]} className="doc_image" />
+              }}/>
               <div className="doc_card_content">
                 <h5 style={{ overflow: "ellipsis" }}>
                   {element.document_name}
@@ -122,11 +136,24 @@ function MainBody({ searchForm }) {
                       <h5>{element.time.split('T')[0]}</h5>
                       <h5>{element.enabled}</h5>
                     </div>
+
                   </div>
-                  <MoreVertIcon style={{ fontSize: "16px", color: "gray" }} />
+                  <div>
+                    <MoreVertIcon style={{ fontSize: "16px", color: "gray" }} onClick={handleClick} />
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleClose}
+                    >
+                      <MenuItem onClick={handleClose}>Opción 1</MenuItem>
+                      <MenuItem onClick={handleClose}>Opción 2</MenuItem>
+                    </Menu>
+                  </div>
                 </div>
               </div>
+
             </div>
+
           ))}
         </div>
 

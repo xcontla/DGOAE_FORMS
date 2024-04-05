@@ -99,22 +99,23 @@ appback.get(`/get_all_filenames_by_user`, async (req, res) => {
     return;
   }
 
+
+
   Form.find({ email: json?.name }, (err, files) => {
     if (err) {
       console.error(err);
       res.json([]);
     } else {
       let js = files.map((file) => {
-
         return {
           name: file.document_name,
           formId: file.IdPregunta,
           description: file.document_description,
           questions: file.questions,
           time: file.fechaEntrega,
-          // enabled: allAccess.enable,
         };
       });
+
       res.json(js);
     }
 

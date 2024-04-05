@@ -53,18 +53,8 @@ function Responses() {
           API_URL + `/getResponses?id=${id}&username=${user.name}`, getConfigHeader(token)
         );
 
-        /* = await axios.post(
-          API_URL + `/hasCryptedInfo`,
-          {
-            fid: id,
-            uname: user.name
-          }, getConfigHeader(token)
-        );*/
-
-
         var cripted = request.data.isEncrypted;
         responses = request.data.resp;
-        console.log(responses);
         rsize = request.data.rsize;
         rcols = request.data.columns;
         dname = request.data.doc_name;
@@ -74,14 +64,11 @@ function Responses() {
         setRCols(rcols);
         setDName(dname);
 
-
         state.pages = Math.floor(rsize / state.perPage);
+
         setState(state);
 
-        items = responses.slice(
-          state.page * state.perPage,
-          (state.page + 1) * state.perPage
-        );
+        items = responses.slice(state.page * state.perPage, (state.page + 1) * state.perPage);
 
         setItems(items);
 
@@ -96,6 +83,9 @@ function Responses() {
   }, [token]);
 
   function handlePageClick(event) {
+
+    console.log("Size" + rsize, "perpage" + state.perPage, "pages" + state.pages, "page" + state.page);
+
     state.page = event.selected;
     setState(state);
 
@@ -103,6 +93,7 @@ function Responses() {
       state.page * state.perPage,
       (state.page + 1) * state.perPage
     );
+
 
     setItems(items);
   }
@@ -132,7 +123,7 @@ function Responses() {
     if (!isCripted)
       return wordTextCipher;
 
-     //console.log("Decrypt: " + wordTextCipher);
+    //console.log("Decrypt: " + wordTextCipher);
 
     var bytes = CryptoJS.AES.decrypt(
       wordTextCipher,
@@ -141,7 +132,6 @@ function Responses() {
 
 
     var textoPlano = bytes.toString(CryptoJS.enc.Utf8);
-    //console.log("Decrypt: " + textoPlano);
     return textoPlano;
   };
 
@@ -207,26 +197,8 @@ function Responses() {
               marginBottom: "20px",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography
-                style={{
-                  fontSize: "15px",
-                  fontWeight: "400",
-                  letterSpacing: ".1px",
-                  lineHeight: "24px",
-                  paddingBottom: "8px",
-                  fontSize: "24px",
-                }}
-              >
-                Respuestas { }
-              </Typography>
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", }}>
+              <Typography style={{ fontSize: "24px", fontWeight: "400", letterSpacing: ".1px", lineHeight: "24px", paddingBottom: "8px" }}>Respuestas </Typography>
             </div>
             <br></br>
             <div style={{ marginBottom: "5px" }}></div>
@@ -255,22 +227,25 @@ function Responses() {
             <br></br>
 
             <div className="pagination-txt">
-              Mostrando {state.page + 1} de {state.perPage} páginas{" "}
+              Mostrando {state.page + 1} de {state.pages} páginas{" "}
+
             </div>
-            <br />
-            <br />
-            <div className="float-end">
-              <ReactPaginate
-                previousLabel={"<<"}
-                nextLabel={">>"}
-                pageCount={state.perPage}
-                onPageChange={handlePageClick}
-                containerClassName={"pagination"}
-                activeClassName={"active"}
-              />
-            </div>
+          </div>
+          <br></br>
+
+          <div className="float-end">
+            <ReactPaginate
+              previousLabel={"<<"}
+              nextLabel={">>"}
+              pageCount={state.pages}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+            />
+          </div>
+          <div className="blank">
             <br></br>
-            <div className="save_form">
+           { /* <div className="save_form">
               <Button
                 variant="contained"
                 color="secondary"
@@ -279,16 +254,15 @@ function Responses() {
               >
                 Regresar
               </Button>
-            </div>
-	 
-	  <div className="footer">
-          <Footer />
-	  
+            </div>*/}
           </div>
+          <div className="footer">
+            <Footer />
+
           </div>
-          </div>
-	  </div>
-	  </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

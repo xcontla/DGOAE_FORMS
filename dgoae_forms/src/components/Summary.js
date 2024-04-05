@@ -38,24 +38,6 @@ function Summary() {
             }
         };
     }
-    const decryptInformation = (wordTextCipher) => {
-    
-    
-        if(!isCripted)
-        return wordTextCipher;
-      
-        console.log("Decrypt: " +  wordTextCipher);
-        
-        var bytes = CryptoJS.AES.decrypt(
-          wordTextCipher,
-          ENCRYPT_STRING
-        );
-    
-    
-        var textoPlano = bytes.toString(CryptoJS.enc.Utf8);
-        console.log("Decrypt: " +  textoPlano);
-        return textoPlano;
-      };
 
     useEffect(() => {
         async function getToken() {
@@ -93,12 +75,6 @@ function Summary() {
             responses = request.data.resp;
             rsize = request.data.rsize;
             rcols = request.data.columns;
-            //questions = request.questions;
-             /*   
-            console.log("Res: ", responses);
-            console.log("Size: ", rsize);
-            console.log("Cols: ", rcols);
-            console.log("Quest: ", questions);*/
           
             isCripted = request.data.isEncrypted;
 
@@ -106,7 +82,6 @@ function Summary() {
             setResponses(responses);
             setRSize(rsize);
             setRCols(rcols);
-            //setQuestions(questions);
 
             }
         };
@@ -114,16 +89,6 @@ function Summary() {
         getReponses();
 
     }, [token]);
-
-    const decryptValues = (obj) => {
-        let resp = {}
-        for (const key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                resp[key] = decryptInformation(obj[key]);
-            }
-        }
-        return resp;
-    }
 
 
     const decryptValues = ( obj) => {
@@ -203,13 +168,13 @@ function Summary() {
                         </div>
                         <br></br>
                         <div style={{ margin: "5px" }}>
-                            <span>Descargar Excel </span>
+                            <span>Descargar en un archivo Excel </span>
                             <Button variant='contained' color='primary' onClick={(e) => descargaExcel()} style={{ fontSize: '12px' }}>Descargar</Button>
                         </div>
 
                         <br></br>
-                        <div className='save_form'>
-                            <Button variant='contained' color='secondary' onClick={regresarPrincipal} style={{ fontSize: '10px' }}>Regresar</Button>
+                        <div className='blank'>
+                            
                         </div>
 
 
