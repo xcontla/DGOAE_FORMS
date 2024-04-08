@@ -18,7 +18,9 @@ import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import Footer from "./Footer";
 import { API_URL } from "../constants";
-
+import copy from "copy-to-clipboard"
+import { Dialog, DialogContent, DialogTitle } from '@mui/material'; 
+import QRCode from 'qrcode.react';
 
 const contactsImages = [
   contact1, contact2, contact3, contact4, contact5, contact6, contact7
@@ -72,14 +74,105 @@ function MainBody({ searchForm }) {
     filesnames();
   }, [token]);
 
+
   const [anchorEl, setAnchorEl] = useState(null);
-  const handleClick = (event) => {
+  const [id, setFormId] = useState(null);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [qrcode, setQR] = useState(false);
+
+  const handleClick = (event, value_id) => {
+
+    console.log(event.currentTarget, value_id);
     setAnchorEl(event.currentTarget);
+    setFormId(value_id);
   };
 
+
   const handleClose = () => {
+
     setAnchorEl(null);
+
   };
+
+  async function copyFormURL() {
+
+    try {
+      const response = await axios.post(
+
+        API_URL + `/copy_url?username=${user.name}&doc_id=${id}`, {}, getConfigHeader(token)
+
+      );
+      
+      copy(response.data.copy_url);
+      window.alert("La URL se copió en el portapapeles. CTRL + V para pegar la URL.");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+
+  const handleCloseURL = () => {
+    copyFormURL();
+    setAnchorEl(null);
+    
+    console.log("Obteniendo URL -> para compartir", id);
+
+  };
+
+  async function copyQR() {
+
+    try {
+      const response = await axios.post(
+
+        API_URL + `/copy_url?username=${user.name}&doc_id=${id}`, {}, getConfigHeader(token)
+
+      );
+      setQR(response.data.copy_url);
+      window.alert("Guarda la imagen QR. Clic derecho en el QR y descarga la imagen.");  
+    } catch (err) {
+      console.log(err);
+      
+    }
+  }
+  const handleOpenPopup = () => {
+    setOpenPopup(true);
+  };
+  
+  const handleClosePopup = () => {
+    setOpenPopup(false);
+  };
+
+
+  const handleCloseQR = () => {
+    copyQR();
+    handleOpenPopup();
+    setAnchorEl(null);
+    console.log("Obteniendo QR -> para compartir", id);
+  };
+
+  async function duplicarForm(){
+    try {
+      const response = await axios.post(
+
+        API_URL + `/duplicate_form?username=${user.name}&doc_id=${id}`, {}, getConfigHeader(token)
+
+      );
+      if(response.data.result)
+        window.confirm(response.data.message);
+
+    } catch (err) {
+      console.log(err);
+      
+    }
+  }
+
+  const handleCloseDuplicar = () => {
+
+    if (window.confirm('¿Quieres duplicar el formulario?')) { duplicarForm() };
+    setAnchorEl(null);
+    console.log("Duplicar", id);
+
+  }
 
 
 
@@ -108,10 +201,10 @@ function MainBody({ searchForm }) {
               key={index}
               className="doc_cards"
             >
-              <img src={contactsImages[index % contactsImages.length]} className="doc_image"               
-              onClick={() => {
-                navegate_to(element.formId);
-              }}/>
+              <img src={contactsImages[index % contactsImages.length]} className="doc_image"
+                onClick={() => {
+                  navegate_to(element.formId);
+                }} />
               <div className="doc_card_content">
                 <h5 style={{ overflow: "ellipsis" }}>
                   {element.document_name}
@@ -139,16 +232,25 @@ function MainBody({ searchForm }) {
 
                   </div>
                   <div>
-                    <MoreVertIcon style={{ fontSize: "16px", color: "gray" }} onClick={handleClick} />
+                    <MoreVertIcon style={{ fontSize: "16px", color: "gray" }} onClick={(e) => handleClick(e, element.formId)} />
                     <Menu
                       anchorEl={anchorEl}
                       open={Boolean(anchorEl)}
                       onClose={handleClose}
                     >
-                      <MenuItem onClick={handleClose}>Opción 1</MenuItem>
-                      <MenuItem onClick={handleClose}>Opción 2</MenuItem>
+                      <MenuItem onClick={handleCloseURL}>Copiar URL</MenuItem>
+                      <MenuItem onClick={handleCloseQR}>Descargar QR</MenuItem>
+                      <MenuItem onClick={handleCloseDuplicar}>Duplicar Formulario</MenuItem>
                     </Menu>
                   </div>
+                  <Dialog open={openPopup} onClose={handleClosePopup}>
+                    <DialogTitle>QR Code</DialogTitle>
+                    <DialogContent>
+                      {/* <img src={qrcode} alt="QR Code" /> Aquí puedes mostrar el código QR */}
+                      <QRCode value={qrcode} />
+                      
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
 

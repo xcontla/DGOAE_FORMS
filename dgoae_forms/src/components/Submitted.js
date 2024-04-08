@@ -1,5 +1,5 @@
 
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/core";
 import axios from "axios";
 import Lottie from "lottie-web";
 import React, { useEffect, useState } from "react";

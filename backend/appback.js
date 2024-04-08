@@ -163,7 +163,7 @@ appback.get("/getform", async (req, res) => {
 
   try {
 
-    
+
     const allAccess = await AllAccess.findOne({ gid: globalID });
     if (allAccess.enable === true) {
       const form = await Form.findOne({ IdPregunta: allAccess.IdPregunta });
@@ -376,6 +376,94 @@ appback.post("/remove_form", async (req, res) => {
 });
 
 
+appback.post("/copy_url", async (req, res) => {
+  const json = await decodeToken(req.headers.dgoaetoken);
+  console.log(json);
+  console.log(req.headers);
+  const user_id = req.query.username;
+
+
+  if (user_id !== json.name) {
+    res.status(401).send("Unauthorized");
+    return;
+  }
+
+  const document_id = req.query.doc_id;
+
+  try {
+    const allAccess = await AllAccess.findOne({ IdPregunta: document_id });
+
+    const jsonres = {
+      message: "Usuario:" + user_id + " Copió la URL  " + document_id,
+      copy_url: "https://dgoae.digitaloe.unam.mx/dgoaeforms/responseform/" + allAccess.gid
+    };
+
+    return res.json(jsonres);
+  } catch (ex) {
+
+    return res.json({
+      message: "No se encontro el formulario: " + document_id,
+      copy_url: "https://dgoae.digitaloe.unam.mx/dgoaeforms/responseform/" + document_id
+    });
+  }
+});
+
+
+
+appback.post("/duplicate_form", async (req, res) => {
+  const json = await decodeToken(req.headers.dgoaetoken);
+  console.log(json);
+  console.log(req.headers);
+  const user_id = req.query.username;
+
+  if (user_id !== json.name) {
+    res.status(401).send("Unauthorized");
+    return;
+  }
+
+  const document_id = req.query.doc_id;
+
+  try {
+
+    const form = await Form.findOne({ IdPregunta: document_id });
+
+    const id_pregunta_new = uuidv4();
+    const document = new Form({
+      email: form.email,
+      IdPregunta: id_pregunta_new,
+      document_name: form.document_name + "Duplicado",
+      document_description: form.document_description,
+      isEncrypted: true,
+
+      questions: form.questions,
+    });
+
+    await document.save();
+
+    const newForm = new AllAccess({
+      email: user_id,
+      gid: uuidv4(),
+      IdPregunta: id_pregunta_new,
+      enable: false,
+      isEncrypted: true,
+      IdRespuesta: uuidv4(),
+    });
+    await newForm.save();
+
+    return res.json({
+      message: "Se duplicó el formulario: " + form.document_name +". Si no se despliega, favor de recargar la página.",
+      result: true
+    });
+
+  } catch (ex) {
+
+    return res.json({
+      message: "No se encontro el formulario: " + document_id,
+      result: false
+    });
+  }
+});
+
 appback.post("/student_response", async (req, res) => {
 
   const encryptInformation = (wordTextPlain) => {
@@ -386,20 +474,20 @@ appback.post("/student_response", async (req, res) => {
     return textoCifrado.toString();
   };
 
-    console.log("STUDENT_RESPONSE");
-    console.log(req);
+  console.log("STUDENT_RESPONSE");
+  console.log(req);
   const docs_data = req.body;
   const globalID = docs_data.global_id;
 
-    console.log("1",docs_data);
-console.log("2",globalID);
+  console.log("1", docs_data);
+  console.log("2", globalID);
 
   try {
     const response = await Response.findOne({
       gid: globalID,
     });
 
-console.log("3",response);
+    console.log("3", response);
     if (!response) {
       const newResponse = new Response({
         gid: globalID,
@@ -409,7 +497,7 @@ console.log("3",response);
         doc_name: docs_data.doc_name,
       });
 
-	console.log("4",newResponse);
+      console.log("4", newResponse);
 
       await newResponse.save();
       res.sendStatus(200);
@@ -519,53 +607,53 @@ appback.post(`/hasCryptedInfo`, async (req, res) => {
 
 appback.get(`/getResponses`, async (req, res) => {
 
+  console.log("responses");
+
+  const json = await decodeToken(req.headers.dgoaetoken);
+  var userID = req.query.username;
+  const fid = req.query.id;
+
+  console.log("----", json, userID, fid);
+  if (userID !== json?.name) {
+    res.status(401).send("Unauthorized");
+    return;
+  }
+  try {
+
+    //const accessfile = await Form.findOne({ IdPregunta: fid });
+
+    const accessfile = await AllAccess.findOne({ IdPregunta: fid });
+    if (!accessfile) {
+      res.send({ rsize: 0, resp: [], columns: [], doc_name: "Untitled", isEnabled: false, isEncrypted: false });
+      return;
+    }
+    console.log(accessfile);
+
+    const isEnabled = accessfile.enable;
+    const isEncrypted = accessfile.isEncrypted;
+    const fgid = accessfile.gid;
+    const s_response = await Response.findOne({ gid: fgid });
+
+
+    console.log(s_response, "gid", fgid);
+    console.log("---------------------------");
+    const json_responses = {
+      rsize: s_response?.responses.length,
+      resp: s_response?.responses,
+      columns: s_response?.columns,
+      doc_name: s_response?.doc_name,
+      isEnabled: isEnabled,
+      isEncrypted: isEncrypted,
+
+    };
+    console.log(json_responses);
+    res.send(json_responses);
+
     console.log("responses");
-
-    const json = await decodeToken(req.headers.dgoaetoken);
-    var userID = req.query.username;
-    const fid = req.query.id;
-    
-    console.log("----",json, userID, fid );
-    if (userID !== json?.name) {
-	res.status(401).send("Unauthorized");
-	return;
-    }
-    try {
-	
-	//const accessfile = await Form.findOne({ IdPregunta: fid });
-	
-	const accessfile = await AllAccess.findOne({ IdPregunta: fid });
-	if (!accessfile) {
-	    res.send({ rsize: 0, resp: [], columns: [], doc_name: "Untitled", isEnabled: false, isEncrypted: false });
-	    return;
-	}
-	console.log(accessfile);
-	
-	const isEnabled = accessfile.enable;
-	const isEncrypted = accessfile.isEncrypted;
-	const fgid = accessfile.gid;
-	const s_response = await Response.findOne({ gid: fgid });
-	
-
-	console.log(s_response,"gid",fgid);
-	console.log("---------------------------");
-	const json_responses = {
-	    rsize: s_response?.responses.length,
-	    resp: s_response?.responses,
-	    columns: s_response?.columns,
-	    doc_name: s_response?.doc_name,
-	    isEnabled: isEnabled,
-	    isEncrypted: isEncrypted,
-	    
-	};
-	console.log(json_responses);
-	res.send(json_responses);
-
-	console.log("responses");
-    } catch (err) {
-	console.log(err);
-	res.send({ rsize: 0, resp: [], columns: [] });
-    }
+  } catch (err) {
+    console.log(err);
+    res.send({ rsize: 0, resp: [], columns: [] });
+  }
 });
 
 appback.get(`/getFormData`, async (req, res) => {

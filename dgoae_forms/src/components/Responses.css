@@ -61,3 +61,23 @@
     margin: auto;
     width: 100px;
 }
+
+.user_form{
+    background-color: #f4f4f9;
+    height: 100%;
+    padding-bottom: 30px;
+}
+
+.user_form_section{
+
+    margin: auto;
+    width: 50%;
+}
+
+.user_form_questions{
+    background-color: white;
+    border-top: 8px solid rgb(103,58,183);
+    border-radius: 8px;
+    padding: 30px 25px;
+    text-transform: capitalize;
+}

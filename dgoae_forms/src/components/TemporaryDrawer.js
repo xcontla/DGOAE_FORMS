@@ -1,6 +1,6 @@
 import React from "react";
 
-import MenuIcon from "@material-ui/icons/Menu";
+import MenuIcon from "@mui/icons/Menu";
 import {
   IconButton,
   Divider,
@@ -9,7 +9,7 @@ import {
   ListItem,
   ListItemText,
   makeStyles,
-} from "@material-ui/core";
+} from "@mui/core";
 import "./TemporaryDrawer.css";
 import docsimage from "../images/google_docs_logo.png";
 import formimage from "../images/google-forms-logo-icon.png";

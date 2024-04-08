@@ -44,12 +44,17 @@ const LoginButton = () => {
             </div>
           </nav>
         </div>
-        <div className="text">
-          <h2>DGOAE FORMULARIOS</h2>
+        <div className="columnas_titulo">
+          <div className="text columna_titulo columna_titulo1">
           <h3>Bienvenid@s</h3>
-          <p>
-            Una manera sencilla de hacer y resolver cuestionarios en la Dirección General de Orientación y Atención Educativa
-          </p>
+            <p>
+              Una manera sencilla de hacer y resolver cuestionarios en la Dirección General de Orientación y Atención Educativa
+            </p>
+          </div>
+          <div className="text columna_titulo columna_titulo1">
+            
+            <h2>DGOAE FORMULARIOS</h2>
+          </div>
         </div>
         <div className="columnas">
           <div className="text columna columna1">

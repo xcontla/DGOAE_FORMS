@@ -266,70 +266,25 @@ function QuestionForm() {
 
   function setOptionAnswer(ans, i) {
     var qs = [...questions];
-    console.log(
-      "Antes" +
-      i +
-      " " +
-      qs[i].answer +
-      " " +
-      qs[i].answerkey +
-      " " +
-      qs[i].points
-    );
     qs[i].answerkey = ans;
-    console.log(
-      "Después" +
-      i +
-      " " +
-      qs[i].answer +
-      " " +
-      qs[i].answerkey +
-      " " +
-      qs[i].points
-    );
     setQuestions(qs);
   }
 
   function setOptionPoints(points, i) {
     var qs = [...questions];
-    console.log(
-      "Antes" +
-      i +
-      " " +
-      qs[i].answer +
-      " " +
-      qs[i].answerkey +
-      " " +
-      qs[i].points
-    );
     qs[i].points = points;
-
-    console.log(
-      "Después" +
-      i +
-      " " +
-      qs[i].answer +
-      " " +
-      qs[i].answerkey +
-      " " +
-      qs[i].points
-    );
     setQuestions(qs);
   }
 
   function doneAnswer(i) {
     var qs = [...questions];
-    console.log("Antes" + i + " " + qs[i].answer + " " + qs[i].answerkey);
     qs[i].answer = !qs[i].answer;
-    console.log("Despues" + i + " " + qs[i].answer + " " + qs[i].answerkey);
     setQuestions(qs);
   }
 
   function addAnswer(i) {
     var qs = [...questions];
-    console.log("Antes" + i + " " + qs[i].answer + " " + qs[i].answerkey);
     qs[i].answer = !qs[i].answer;
-    console.log("Despues" + i + " " + qs[i].answer + " " + qs[i].answerkey);
     setQuestions(qs);
   }
 

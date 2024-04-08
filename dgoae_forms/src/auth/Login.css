@@ -11,8 +11,9 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-image: url('https://pbs.twimg.com/media/EA7uBx-WsAEAj5H?format=jpg&name=medium');
-    /*background-image: url('../images/bkground.jpg');*/
+    /*background-image: url('https://pbs.twimg.com/media/EA7uBx-WsAEAj5H?format=jpg&name=medium');
+    background-image: url('../images/bkground.jpg');*/
+    background-image: url('../images/fondo_formularios_dgoae.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -279,6 +280,52 @@ header {
     }
     
     .columna1, .columna2 {
+      margin: 10px 0; /* Adjust margins for smaller screens */
+    }
+  }
+
+
+  .columnas_titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 100px; /* Adjust margins as needed */
+  }
+  
+  .columna_titulo {
+    flex: 1;
+    padding: 20px;
+    /*border: 1px solid #ccc;*/
+    /*background-color: rgba(245, 245, 245, 0.5);*/ /* Add transparency here */
+    display: flex;
+    flex-direction: column;
+    align-items: left; /* Center items horizontally */
+    text-shadow: 0 0 2px #283135, 0 0 5px #283135;
+  }
+  
+  .columna_titulo1 {
+    margin-right: 20px; /* Add some spacing between columns */
+  }
+
+.columna_titulo input,
+.columna_titulo button {
+    width: 100%; /* Take full width within the column */
+    max-width: 500px; /* Limit width to 500px */
+    margin: 10px 0;
+}
+  
+  .columna_titulo2 {
+    margin-left: 20px; /* Add some spacing between columns */
+  }
+
+  @media (max-width: 768px) {
+    .columnas_titulo {
+      flex-direction: column; /* Stack columns vertically on smaller screens */
+      align-items: stretch; /* Stretch items to full width */
+      margin: 20px 20px; /* Adjust margins for smaller screens */
+    }
+    
+    .columnas_titulo1, .columnas_titulo2 {
       margin: 10px 0; /* Adjust margins for smaller screens */
     }
   }
