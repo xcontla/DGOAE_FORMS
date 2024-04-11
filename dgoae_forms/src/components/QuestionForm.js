@@ -71,7 +71,7 @@ function QuestionForm() {
   const [questions, setQuestions] = useState([
     {
       questionText: "Pregunta",
-      questionType: "radio1",
+      questionType: "radio",
       options: [{ optionText: "Opción 1" }],
       answer: false,
       answerkey: "",
@@ -216,7 +216,7 @@ function QuestionForm() {
       ...questions,
       {
         questionText: "Pregunta: ",
-        questionType: "radio1",
+        questionType: "radio",
         options: [{ optionText: "Opción 1" }],
         open: true,
         required: false,
@@ -262,6 +262,7 @@ function QuestionForm() {
       }
     }
     setQuestions(qs);
+    
   }
 
   function setOptionAnswer(ans, i) {
@@ -307,7 +308,7 @@ function QuestionForm() {
     });
 
     try {
-      console.log(API_URL + `/add_question?username=${user.name}&doc_id=${id}`);
+      //console.log(API_URL + `/add_question?username=${user.name}&doc_id=${id}`);
       const response = await axios.post(
         API_URL + `/add_question?username=${user.name}&doc_id=${id}`,
         {
@@ -460,7 +461,7 @@ function QuestionForm() {
                               <input
                                 type="text"
                                 className="question"
-                                placeholder='Escribe una respuesta'
+                                placeholder='Escribe una pregunta'
                                 value={ques.questionText}
                                 onChange={(e) =>
                                   changeQuestion(e.target.value, i)

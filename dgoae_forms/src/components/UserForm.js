@@ -42,14 +42,9 @@ export const UserForm = () => {
   const captcha = useRef(null);
 
   const onChange = async (e) => {
-    /*console.log(e)
-    console.log("-----");
-    let token = captcha.current.getValue();
-    console.log(token)
-    captcha.current.reset();*/
 
     let token = e;
-    
+
     if (token) {
       let new_valid_token = await verifyToken(token);
       setValidToken([new_valid_token[0]]);
@@ -161,39 +156,47 @@ export const UserForm = () => {
 
     });
 
-    axios.post(API_URL + `/student_response`, {
-      global_id: global_id,
-      column: quest_excel,
-      doc_name: doc_name,
-      answer_data: [post_answer_data],
-    });
-    navigate("/submitted/" + global_id);
 
 
 
-    /*questions.map((ele) => {
-
-      if (ele.required === true) {
+    var send_info = false;
+    questions.map((ele) => {
+  
+      if (ele.required) {
         var k = answer.findIndex((el) => el.question === ele.questionText);
         if (k === -1 || answer[k].answer.trim() === "") {
           alert("Hay preguntas que debes de responder, son requeridas para el formulario");
+          send_info = false;
         } else {
-           console.log("Respuestas Enviando Respuestas");
-          axios.post(API_URL +`/student_response`, {
-              global_id: global_id,
-              column: quest_excel,
-              doc_name: doc_name,
-              answer_data: [post_answer_data],
-            })
-            .then(() => {
-              navigate("/submitted/" + global_id);
-            })
-            .catch((error) => {
-              console.error("Error al enviar la respuesta:", error);
-            });
+          send_info = true;
         }
       }
-   });*/
+
+    });
+    if(send_info){
+      console.log("Respuestas Enviando Respuestas");
+          axios.post(API_URL + `/student_response`, {
+            global_id: global_id,
+            column: quest_excel,
+            doc_name: doc_name,
+            answer_data: [post_answer_data],
+          }).then(() => {
+            navigate("/submitted/" + global_id);
+          }).catch((error) => {
+            console.error("Error al enviar la respuesta:", error);
+          });
+    }
+    /*
+    
+      axios.post(API_URL + `/student_response`, {
+        global_id: global_id,
+        column: quest_excel,
+        doc_name: doc_name,
+        answer_data: [post_answer_data],
+      });
+    */
+    // navigate("/submitted/" + global_id);
+
   }
 
   return (
@@ -201,22 +204,22 @@ export const UserForm = () => {
       <div className="user_form">
         <div className="user_form_section">
           <div className="user_form_row">
-          <div className="user_form_column_left">
-          <img
-      src={UNAMfull}
-      alt="UNAM"
-      width="400px"
-      className="form_image"
-          />
-          </div>
-          <div className="user_form_column_right">
-          <img
-      src={DGOAEfull}
-      alt="DGOAE"
-      width="400px"
-      className="form_image"
-          />
-          </div>
+            <div className="user_form_column_left">
+              <img
+                src={UNAMfull}
+                alt="UNAM"
+                width="400px"
+                className="form_image"
+              />
+            </div>
+            <div className="user_form_column_right">
+              <img
+                src={DGOAEfull}
+                alt="DGOAE"
+                width="400px"
+                className="form_image"
+              />
+            </div>
           </div>
 
           <div className="user_title_section">

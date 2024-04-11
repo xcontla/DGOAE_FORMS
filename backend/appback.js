@@ -395,7 +395,7 @@ appback.post("/copy_url", async (req, res) => {
 
     const jsonres = {
       message: "Usuario:" + user_id + " Copió la URL  " + document_id,
-      copy_url: "https://dgoae.digitaloe.unam.mx/dgoaeforms/responseform/" + allAccess.gid
+      copy_url: allAccess.gid
     };
 
     return res.json(jsonres);
@@ -403,7 +403,7 @@ appback.post("/copy_url", async (req, res) => {
 
     return res.json({
       message: "No se encontro el formulario: " + document_id,
-      copy_url: "https://dgoae.digitaloe.unam.mx/dgoaeforms/responseform/" + document_id
+      copy_url: document_id
     });
   }
 });

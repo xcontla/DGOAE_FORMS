@@ -21,7 +21,7 @@ import { API_URL } from "../constants";
 import copy from "copy-to-clipboard"
 import { Dialog, DialogContent, DialogTitle } from '@mui/material'; 
 import QRCode from 'qrcode.react';
-
+import {APP_URL, APP_URL2} from "../constants"
 const contactsImages = [
   contact1, contact2, contact3, contact4, contact5, contact6, contact7
 ];
@@ -103,7 +103,7 @@ function MainBody({ searchForm }) {
 
       );
       
-      copy(response.data.copy_url);
+      copy(APP_URL + "/responseform/"+ response.data.copy_url);
       window.alert("La URL se copió en el portapapeles. CTRL + V para pegar la URL.");
     } catch (err) {
       console.log(err);
@@ -127,7 +127,7 @@ function MainBody({ searchForm }) {
         API_URL + `/copy_url?username=${user.name}&doc_id=${id}`, {}, getConfigHeader(token)
 
       );
-      setQR(response.data.copy_url);
+      setQR(APP_URL + "/responseform/"+ response.data.copy_url);
       window.alert("Guarda la imagen QR. Clic derecho en el QR y descarga la imagen.");  
     } catch (err) {
       console.log(err);
@@ -244,9 +244,8 @@ function MainBody({ searchForm }) {
                     </Menu>
                   </div>
                   <Dialog open={openPopup} onClose={handleClosePopup}>
-                    <DialogTitle>QR Code</DialogTitle>
+                    <DialogTitle>Código QR</DialogTitle>
                     <DialogContent>
-                      {/* <img src={qrcode} alt="QR Code" /> Aquí puedes mostrar el código QR */}
                       <QRCode value={qrcode} />
                       
                     </DialogContent>
