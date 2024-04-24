@@ -66,6 +66,7 @@ function QuestionForm() {
   const navigate = useNavigate();
   const [isEncrypt, setIsEncrypt] = useState(true);
   const [isRequired, setIsRequired] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
   const [document_name, setDocName] = useState("Documento sin título");
   const [document_description, setDocDesc] = useState("Agrega una descripción");
   const [questions, setQuestions] = useState([
@@ -90,16 +91,24 @@ function QuestionForm() {
           API_URL + `/data?username=${user.name}&doc_id=${id}`, getConfigHeader(token)
         );
 
-        console.log(request.data);
+        var reqIsEnable = await axios.get(
+          API_URL + `/isFormEnabled?username=${user.name}&doc_id=${id}`, getConfigHeader(token)
+
+        )        
+
+
+        console.log(request.data, reqIsEnable.data);
         var question_data = request.data.formdata.questions;
 
         var doc_name = request.data.formdata.document_name;
         var doc_desc = request.data.formdata.document_description;
         var isEncrypt = request.data.isEncrypted;
+        var reqEnabled = reqIsEnable.data.isFormEnabled;
         setDocName(doc_name);
         setDocDesc(doc_desc);
         setQuestions(question_data);
         setIsEncrypt(isEncrypt);
+        setIsEnabled(reqEnabled)
 
         dispatch({
           type: actionTypes.SET_DOC_NAME,
@@ -874,6 +883,8 @@ function QuestionForm() {
               size="large"
               onClick={commitToDB}
               startIcon={<SaveIcon />}
+              disabled={isEnabled}
+              
             >
               Guardar formulario
             </Button>
@@ -883,6 +894,7 @@ function QuestionForm() {
               size="large"
               onClick={() => { if (window.confirm('¿Quieres borrar el formulario?')) { removeForm() } }}
               startIcon={<BsTrash />}
+              disabled={isEnabled}
             >
               Borrar Formulario
             </Button>}

@@ -192,6 +192,9 @@ appback.get(`/getGlobalID`, async (req, res) => {
 
   const gid = req.query.id;
   console.log(req.headers);
+
+
+
   try {
     const result = await AllAccess.findOne({ IdPregunta: gid });
     if (!result) {
@@ -203,6 +206,32 @@ appback.get(`/getGlobalID`, async (req, res) => {
     res.status(500).send({ error: "Internal Server Error" });
   }
 });
+
+
+appback.get(`/isFormEnabled`, async (req, res) => {
+
+  const json = await decodeToken(req.headers.dgoaetoken);
+  var userID = req.query.username;
+  if (userID !== json?.name) {
+    res.status(401).send("Unauthorized");
+    return;
+  }
+
+  const docid = req.query.doc_id;
+  try {
+    const result = await AllAccess.findOne({ IdPregunta: docid });
+    if (!result) {
+      return;
+    }
+    
+  console.log(" ENABLEDDDDD ", result.enable, docid );
+    res.json({ isFormEnabled: result.enable });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+
 
 appback.post("/add_question", async (req, res) => {
 
@@ -620,8 +649,6 @@ appback.get(`/getResponses`, async (req, res) => {
   }
   try {
 
-    //const accessfile = await Form.findOne({ IdPregunta: fid });
-
     const accessfile = await AllAccess.findOne({ IdPregunta: fid });
     if (!accessfile) {
       res.send({ rsize: 0, resp: [], columns: [], doc_name: "Untitled", isEnabled: false, isEncrypted: false });
@@ -634,18 +661,32 @@ appback.get(`/getResponses`, async (req, res) => {
     const fgid = accessfile.gid;
     const s_response = await Response.findOne({ gid: fgid });
 
-
-    console.log(s_response, "gid", fgid);
-    console.log("---------------------------");
     const json_responses = {
-      rsize: s_response?.responses.length,
-      resp: s_response?.responses,
-      columns: s_response?.columns,
-      doc_name: s_response?.doc_name,
+      rsize: 0,
+      resp: [],
+      columns: 0,
+      doc_name: "",
       isEnabled: isEnabled,
       isEncrypted: isEncrypted,
 
     };
+  
+    if(s_response){
+      console.log(s_response?.responses.length, "gid", fgid);
+      console.log("---------------------------");
+
+      json_responses = {
+        rsize: s_response?.responses.length,
+        resp: s_response?.responses,
+        columns: s_response?.columns,
+        doc_name: s_response?.doc_name,
+        isEnabled: isEnabled,
+        isEncrypted: isEncrypted,
+  
+      };
+
+    }
+    
     console.log(json_responses);
     res.send(json_responses);
 
