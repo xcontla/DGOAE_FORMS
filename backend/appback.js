@@ -661,7 +661,7 @@ appback.get(`/getResponses`, async (req, res) => {
     const fgid = accessfile.gid;
     const s_response = await Response.findOne({ gid: fgid });
 
-    const json_responses = {
+    let json_responses = {
       rsize: 0,
       resp: [],
       columns: 0,
