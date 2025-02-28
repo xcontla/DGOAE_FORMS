@@ -22,6 +22,7 @@
     "bootstrap": "^5.3.0",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
+    "dgoae_forms": "file:",
     "exceljs": "^4.3.0",
     "export-from-json": "^1.6.0",
     "express": "^4.17.3",

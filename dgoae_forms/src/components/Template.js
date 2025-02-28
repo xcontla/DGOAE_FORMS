@@ -37,7 +37,7 @@ function Template() {
         options: [{ optionText: "Opción 1" }],
         open: true,
         required: false,
-        isEncrypt: false
+        isEncrypt: true
       },
     ];
     try {

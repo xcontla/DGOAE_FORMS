@@ -11,7 +11,7 @@ import Select from "@material-ui/core/Select";
 import Switch from "@material-ui/core/Switch";
 import CheckboxIcon from "@material-ui/icons/CheckBox";
 import SubjectIcon from "@material-ui/icons/Subject";
-import { BsTrash, BsFileText } from "react-icons/bs";
+import { BsTrash, BsFileText, BsHandThumbsUp, BsHandThumbsDownFill, BsHandThumbsUpFill } from "react-icons/bs";
 import { IconButton, MenuItem, Typography } from "@material-ui/core";
 import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
@@ -65,6 +65,7 @@ function QuestionForm() {
 
   const navigate = useNavigate();
   const [isEncrypt, setIsEncrypt] = useState(true);
+  const [hasResponse, setHasResponse] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [document_name, setDocName] = useState("Documento sin título");
@@ -96,6 +97,9 @@ function QuestionForm() {
 
         )        
 
+        var responses = await axios.get(
+          API_URL + `/getResponses?id=${id}&username=${user.name}`, getConfigHeader(token)
+        );
 
         console.log(request.data, reqIsEnable.data);
         var question_data = request.data.formdata.questions;
@@ -109,6 +113,12 @@ function QuestionForm() {
         setQuestions(question_data);
         setIsEncrypt(isEncrypt);
         setIsEnabled(reqEnabled)
+
+        var rsize= responses.data.rsize;
+
+        if(rsize > 0){
+          setHasResponse(true);
+        }  
 
         dispatch({
           type: actionTypes.SET_DOC_NAME,
@@ -355,6 +365,22 @@ function QuestionForm() {
     regresarPrincipal()
   }
 
+  async function habilitarFormulario() {
+
+    console.log("Habilitando el formulario: " + { id });
+
+    try {
+      const response = await axios.put(
+
+        API_URL + `/enable_disable?username=${user.name}&doc_id=${id}`, {}, getConfigHeader(token)
+
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
+    regresarPrincipal()
+  }
 
   function questionUI() {
     return questions?.map((ques, i) => (
@@ -894,10 +920,31 @@ function QuestionForm() {
               size="large"
               onClick={() => { if (window.confirm('¿Quieres borrar el formulario?')) { removeForm() } }}
               startIcon={<BsTrash />}
-              disabled={isEnabled}
+              disabled={isEnabled || hasResponse}
             >
               Borrar Formulario
-            </Button>}
+            </Button>
+            }{ isEnabled ?
+              <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              onClick={habilitarFormulario}
+              startIcon={<BsHandThumbsDownFill />}
+             >
+              DESHABILITAR FORMULARIO
+              </Button>
+              : 
+              <Button
+              variant="outlined"
+              color="secondary"
+              size="small"
+              onClick={habilitarFormulario}
+              startIcon={<BsHandThumbsUpFill />}
+             >
+              PUBLICAR
+              </Button>
+            }
           </div>
           <br></br>
           <hr />

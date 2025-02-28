@@ -355,7 +355,6 @@ appback.post("/add_question_encrypted", async (req, res) => {
       document_name: document_data.document_name,
       document_description: document_data.document_description,
       isEncrypted: document_data.isEncrypted,
-
       questions: document_data.questions,
     });
     await form.updateOne({
@@ -590,14 +589,44 @@ appback.get(`/getExcel`, async (req, res) => {
   }
 });
 
-appback.post(`/enable_disable`, async (req, res) => {
+appback.put(`/enable_disable`, async (req, res) => {
+
   const json = await decodeToken(req.headers.dgoaetoken);
   console.log(json);
-  var docs_data = req.body;
-  var fid = docs_data.fid;
-  var isEnabled = docs_data.enabled;
-  res.send(null);
   console.log(req.headers);
+  const userID = req.query.username;
+
+  if (userID !== json?.name) {
+    res.status(401).send("Unauthorized");
+    return;
+  }
+
+  const document_id = req.query.doc_id;
+
+  try {
+    const result = await AllAccess.findOne({ IdPregunta: document_id });
+    const isEnabled = result.enable;
+    console.log("enable_disable   "   + document_id + " " + isEnabled);
+    if (!result) {
+    
+      return res.json({ message: "Not Found record" });
+    
+    }else{
+      
+      
+  
+
+      await  result.updateOne({ enable: !isEnabled });
+
+
+      res.json({ message: "Ralizado"  });
+    }
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+
 });
 
 
