@@ -146,6 +146,8 @@ export const UserForm = () => {
 
   function submit() {
 
+    console.log("ALGO", answer);
+
     answer.map((ele) => {
       if (isEncrypted === true) {
         post_answer_data[ele.question] = encryptInformation(ele.answer);
@@ -157,22 +159,37 @@ export const UserForm = () => {
     });
 
 
-
+    console.log("ALGO2");
 
     var send_info = false;
+
+    
+    console.log(questions);
+
     questions.map((ele) => {
   
       if (ele.required) {
+        
+        console.log(ele);
         var k = answer.findIndex((el) => el.question === ele.questionText);
+
+        
+        console.log(k);
         if (k === -1 || answer[k].answer.trim() === "") {
           alert("Hay preguntas que debes de responder, son requeridas para el formulario");
           send_info = false;
         } else {
           send_info = true;
         }
+      }else{
+        send_info = true;
       }
 
     });
+
+
+    console.log("ALGO3", send_info);
+
     if(send_info){
       console.log("Respuestas Enviando Respuestas");
           axios.post(API_URL + `/student_response`, {
@@ -181,6 +198,9 @@ export const UserForm = () => {
             doc_name: doc_name,
             answer_data: [post_answer_data],
           }).then(() => {
+
+            
+            console.log("ALGO4");
             navigate("/submitted/" + global_id);
           }).catch((error) => {
             console.error("Error al enviar la respuesta:", error);
