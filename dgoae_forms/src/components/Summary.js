@@ -63,10 +63,6 @@ function Summary() {
                 setRSize(request.data.rsize);
                 setCripted(request.data.isEncrypted);
                 setQuestions(request.data.questions);
-                
-                if (request.data.isEncrypted) {
-                    data = data.map(decryptValues);
-                }
                 setResponses(data);
                 processChartData(data, request.data.questions);
             } catch (error) {
@@ -87,12 +83,20 @@ function Summary() {
             info = data;
         }
       
+        let infoquestions = [];
+        console.log(questions);
+        if (isCripted) {
+            infoquestions = questions.map((r) => decryptValues(r));
 
+        } else {
+            infoquestions = questions;
+        }
+      
 
 
         let freqData = {};
         
-        const relevantQuestions = questions.filter(q => q.questionType === "radio" || q.questionType === "checkbox");
+        const relevantQuestions = infoquestions.filter(q => q.questionType === "radio" || q.questionType === "checkbox");
         
         relevantQuestions.forEach(q => {
             freqData[q.questionText] = {};
