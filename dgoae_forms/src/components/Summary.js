@@ -67,18 +67,19 @@ function Summary() {
                 setResponses(request.data.resp);
                 setCripted(request.data.isEncrypted);
 
-                processChartData(request.data.resp, request.data.questions, request.data.isEncrypted);
+                
 
             } catch (error) {
                 console.error("Error obteniendo respuestas:", error);
             }
         }
         getResponses();
+        processChartData(responses, questions);;
     }, [token, id]);
 
-    const processChartData = (resp, questions, crypted) => {
+    const processChartData = (resp, questions) => {
 
-        console.log("Data", crypted, resp);
+        console.log("Data", isCripted, resp);
         console.log("Questions", questions);
 
         let freqData = {};
@@ -87,7 +88,7 @@ function Summary() {
 
 
         let info = [];
-        if (crypted) {
+        if (isCripted) {
             info = resp.map((r) => decryptValues(r));
 
         } else {
