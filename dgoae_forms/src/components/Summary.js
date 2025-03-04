@@ -38,12 +38,10 @@ function Summary() {
     });
 
     const decryptInformation = (wordTextCipher) => {
-
         if (!isCripted)
             return wordTextCipher;
 
         var bytes = CryptoJS.AES.decrypt(wordTextCipher, ENCRYPT_STRING);
-
         var textoPlano = bytes.toString(CryptoJS.enc.Utf8);
         return textoPlano;
     };
@@ -63,12 +61,12 @@ function Summary() {
             if (!token) return;
             try {
                 var request = await axios.get(API_URL + `/getResponses?id=${id}&username=${user.name}`, getConfigHeader(token));
-                
+
                 setRSize(request.data.rsize);
                 setQuestions(request.data.questions);
                 setResponses(request.data.resp);
                 setCripted(request.data.isEncrypted);
-                
+
                 processChartData(request.data.resp, request.data.questions, request.data.isEncrypted);
 
             } catch (error) {
@@ -78,9 +76,9 @@ function Summary() {
         getResponses();
     }, [token, id]);
 
-    const processChartData = (data, questions, crypted) => {
+    const processChartData = (resp, questions, crypted) => {
 
-        console.log("Data", crypted, data);
+        console.log("Data", crypted, resp);
         console.log("Questions", questions);
 
         let freqData = {};
@@ -90,18 +88,17 @@ function Summary() {
 
         let info = [];
         if (crypted) {
-            info = data.map((r) => decryptValues(r));
+            info = resp.map((r) => decryptValues(r));
 
         } else {
-            info = data;
+            info = resp;
         }
 
         console.log("INFO", info);
-
         relevantQuestions.forEach(q => {
             freqData[q.questionText] = {};
         });
-
+        console.log("freqData", freqData);
         info.forEach(entry => {
             console.log("Entry", entry);
             relevantQuestions.forEach(q => {
