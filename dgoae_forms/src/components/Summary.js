@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+/*import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Typography, Button } from '@material-ui/core';
 import axios from 'axios';
@@ -62,8 +62,8 @@ function Summary() {
                 setRSize(request.data.rsize);
                 setCripted(request.data.isEncrypted);
                 setQuestions(request.data.questions);
-         
                 setResponses(request.data.isEncrypted);
+
             } catch (error) {
                 console.error("Error obteniendo respuestas:", error);
             }
@@ -78,7 +78,6 @@ function Summary() {
     }, [responses, questions]);
 
     const processChartData = (data, questions) => {
-
 
         console.log(responses);
         let info = [];
@@ -190,9 +189,9 @@ function Summary() {
 }
 
 export default Summary;
+*/
 
 
-/*
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { IconButton, Switch, Typography } from '@material-ui/core'
@@ -388,4 +387,3 @@ function Summary() {
 
 export default Summary
 
-*/
