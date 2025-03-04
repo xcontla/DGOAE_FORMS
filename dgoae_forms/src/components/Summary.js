@@ -69,7 +69,7 @@ function Summary() {
 
                 var cripted = request.data.isEncrypted;
 
-                setCripted(isCripted);
+               
                 setQuestions(request.data.questions);
                 setResponses(data);
                 processChartData(data, request.data.questions);
