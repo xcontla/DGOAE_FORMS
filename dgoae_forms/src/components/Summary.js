@@ -38,12 +38,9 @@ function Summary() {
     });
 
     const decryptInformation = (wordTextCipher) => {
-        if (!isCripted)
-            return wordTextCipher;
-
+        if (!isCripted) return wordTextCipher;
         var bytes = CryptoJS.AES.decrypt(wordTextCipher, ENCRYPT_STRING);
-        var textoPlano = bytes.toString(CryptoJS.enc.Utf8);
-        return textoPlano;
+        return bytes.toString(CryptoJS.enc.Utf8);
     };
 
     const decryptValues = (obj) => {
@@ -62,21 +59,18 @@ function Summary() {
             try {
                 var request = await axios.get(API_URL + `/getResponses?id=${id}&username=${user.name}`, getConfigHeader(token));
                 let data = request.data.resp;
-
+                
                 setRSize(request.data.rsize);
                 setCripted(request.data.isEncrypted);
                 setQuestions(request.data.questions);
-
+                
                 if (request.data.isEncrypted) {
                     data = data.map(decryptValues);
                 }
                 setResponses(data);
-
             } catch (error) {
                 console.error("Error obteniendo respuestas:", error);
             }
-
-
         }
         getResponses();
     }, [token, id]);
@@ -87,42 +81,22 @@ function Summary() {
         }
     }, [responses, questions]);
 
-    const processChartData = (resp, questions) => {
-
-        console.log("Data", isCripted, resp);
-        console.log("Questions", questions);
-
+    const processChartData = (data, questions) => {
         let freqData = {};
-
+        
         const relevantQuestions = questions.filter(q => q.questionType === "radio" || q.questionType === "checkbox");
-
-
-        let info = [];
-        if (isCripted) {
-            info = resp.map((r) => decryptValues(r));
-
-        } else {
-            info = resp;
-        }
-
-        console.log("INFO", info);
+        
         relevantQuestions.forEach(q => {
             freqData[q.questionText] = {};
         });
-
-        console.log("freqData", freqData);
-
-        info.forEach(entry => {
-            console.log("Entry", entry);
+        
+        data.forEach(entry => {
             relevantQuestions.forEach(q => {
-
                 const answer = entry[q.questionText];
-                console.log("answer", answer);
-                console.log("answerDE", decryptInformation(answer));
                 if (answer) {
                     if (Array.isArray(answer)) {
                         answer.forEach(opt => {
-                            freqData[q.questionText][(opt)] = (freqData[q.questionText][(opt)] || 0) + 1;
+                            freqData[q.questionText][opt] = (freqData[q.questionText][opt] || 0) + 1;
                         });
                     } else {
                         freqData[q.questionText][answer] = (freqData[q.questionText][answer] || 0) + 1;
@@ -130,7 +104,7 @@ function Summary() {
                 }
             });
         });
-
+        
         let formattedChartData = relevantQuestions.map(q => {
             let data = { question: q.questionText };
             Object.keys(freqData[q.questionText]).forEach(option => {
@@ -138,27 +112,17 @@ function Summary() {
             });
             return data;
         });
-
+        
         setChartData(formattedChartData);
     };
 
     const colors = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1", "#a4de6c"];
-
+    
     async function descargaExcel() {
-
-        let info = [];
-        console.log(responses);
-        if (isCripted) {
-            info = responses.map((r) => decryptValues(r));
-
-        } else {
-            info = responses;
-        }
-
         if (!responses.length) return;
         const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
         const fileExtension = '.xlsx';
-        const ws = XLSX.utils.json_to_sheet(info);
+        const ws = XLSX.utils.json_to_sheet(responses);
         const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
         const data = new Blob([excelBuffer], { type: fileType });
