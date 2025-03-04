@@ -64,15 +64,14 @@ function Summary() {
             try {
                 var request = await axios.get(API_URL + `/getResponses?id=${id}&username=${user.name}`, getConfigHeader(token));
                 let data = request.data.resp;
-                var cripted = request.data.isEncrypted;
-
+      
                 setRSize(request.data.rsize);
                 setQuestions(request.data.questions);
                 setResponses(data);
-                processChartData(data, request.data.questions);
+                setCripted(request.data.isEncrypted);
 
-                isCripted = cripted;
-                setCripted(isCripted);
+
+                processChartData(data, request.data.questions);
 
             } catch (error) {
                 console.error("Error obteniendo respuestas:", error);
