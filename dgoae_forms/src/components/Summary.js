@@ -39,15 +39,10 @@ function Summary() {
 
  const decryptInformation = (wordTextCipher) => {
 
-
     if (!isCripted)
       return wordTextCipher;
 
-    var bytes = CryptoJS.AES.decrypt(
-      wordTextCipher,
-      ENCRYPT_STRING
-    );
-
+    var bytes = CryptoJS.AES.decrypt(wordTextCipher,ENCRYPT_STRING);
 
     var textoPlano = bytes.toString(CryptoJS.enc.Utf8);
     return textoPlano;
@@ -101,10 +96,10 @@ function Summary() {
                 if (answer) {
                     if (Array.isArray(answer)) {
                         answer.forEach(opt => {
-                            freqData[q.questionText][opt] = (freqData[q.questionText][opt] || 0) + 1;
+                            freqData[q.questionText][decryptInformation(opt)] = (freqData[q.questionText][decryptInformation(opt)] || 0) + 1;
                         });
                     } else {
-                        freqData[q.questionText][answer] = (freqData[q.questionText][answer] || 0) + 1;
+                        freqData[q.questionText][decryptInformation(answer)] = (freqData[q.questionText][decryptInformation(answer)] || 0) + 1;
                     }
                 }
             });
@@ -133,8 +128,6 @@ function Summary() {
         } else {
             info = responses;
         }
-      
-
 
         if (!responses.length) return;
         const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
