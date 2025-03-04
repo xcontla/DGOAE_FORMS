@@ -104,7 +104,9 @@ function Summary() {
         info.forEach(entry => {
             console.log("Entry", entry);
             relevantQuestions.forEach(q => {
-                const answer = decryptValues(entry[q.questionText]);
+                const e = decryptValues(entry);
+                console.log("e", e);
+                const answer = e[q.questionText];
                 console.log("answer", answer);
                 if (answer) {
                     if (Array.isArray(answer)) {
