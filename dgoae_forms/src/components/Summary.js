@@ -98,11 +98,13 @@ function Summary() {
         relevantQuestions.forEach(q => {
             freqData[q.questionText] = {};
         });
+        
         console.log("freqData", freqData);
+        
         info.forEach(entry => {
             console.log("Entry", entry);
             relevantQuestions.forEach(q => {
-                const answer = decryptInformation(entry[q.questionText]);
+                const answer = decryptValues(entry[q.questionText]);
                 console.log("answer", answer);
                 if (answer) {
                     if (Array.isArray(answer)) {
