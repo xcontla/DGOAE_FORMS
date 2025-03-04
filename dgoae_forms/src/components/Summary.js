@@ -86,11 +86,22 @@ function Summary() {
         
         const relevantQuestions = questions.filter(q => q.questionType === "radio" || q.questionType === "checkbox");
         
+        
+        let info = [];
+        if (isCripted) {
+            info = data.map((r) => decryptValues(r));
+
+        } else {
+            info = data;
+        }
+
+        console.log("INFO", info);
+
         relevantQuestions.forEach(q => {
             freqData[q.questionText] = {};
         });
         
-        data.forEach(entry => {
+        info.forEach(entry => {
             relevantQuestions.forEach(q => {
                 const answer = entry[q.questionText];
                 if (answer) {
