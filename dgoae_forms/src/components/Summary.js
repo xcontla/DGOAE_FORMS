@@ -61,21 +61,31 @@ function Summary() {
             if (!token) return;
             try {
                 var request = await axios.get(API_URL + `/getResponses?id=${id}&username=${user.name}`, getConfigHeader(token));
+                let data = request.data.resp;
 
                 setRSize(request.data.rsize);
-                setQuestions(request.data.questions);
-                setResponses(request.data.resp);
                 setCripted(request.data.isEncrypted);
+                setQuestions(request.data.questions);
 
-                
+                if (request.data.isEncrypted) {
+                    data = data.map(decryptValues);
+                }
+                setResponses(data);
 
             } catch (error) {
                 console.error("Error obteniendo respuestas:", error);
             }
+
+
         }
         getResponses();
-        processChartData(responses, questions);;
     }, [token, id]);
+
+    useEffect(() => {
+        if (responses.length > 0 && questions.length > 0) {
+            processChartData(responses, questions);
+        }
+    }, [responses, questions]);
 
     const processChartData = (resp, questions) => {
 
@@ -99,13 +109,13 @@ function Summary() {
         relevantQuestions.forEach(q => {
             freqData[q.questionText] = {};
         });
-        
+
         console.log("freqData", freqData);
-        
+
         info.forEach(entry => {
             console.log("Entry", entry);
             relevantQuestions.forEach(q => {
-             
+
                 const answer = entry[q.questionText];
                 console.log("answer", answer);
                 console.log("answerDE", decryptInformation(answer));
