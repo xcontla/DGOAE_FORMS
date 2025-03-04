@@ -79,8 +79,8 @@ function Summary() {
 
     const processChartData = (data, questions) => {
 
-        console.log("Data", data);
-        console.log("Questions", questions);
+        console.log("Data", isCripted, data);
+        console.log("Questions" , questions);
 
         let freqData = {};
         
@@ -107,10 +107,10 @@ function Summary() {
                 if (answer) {
                     if (Array.isArray(answer)) {
                         answer.forEach(opt => {
-                            freqData[q.questionText][decryptInformation(opt)] = (freqData[q.questionText][decryptInformation(opt)] || 0) + 1;
+                            freqData[q.questionText][opt] = (freqData[q.questionText][opt] || 0) + 1;
                         });
                     } else {
-                        freqData[q.questionText][decryptInformation(answer)] = (freqData[q.questionText][decryptInformation(answer)] || 0) + 1;
+                        freqData[q.questionText][answer] = (freqData[q.questionText][answer] || 0) + 1;
                     }
                 }
             });
