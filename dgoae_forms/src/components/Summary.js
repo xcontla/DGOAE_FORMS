@@ -63,15 +63,15 @@ function Summary() {
             if (!token) return;
             try {
                 var request = await axios.get(API_URL + `/getResponses?id=${id}&username=${user.name}`, getConfigHeader(token));
-                let data = request.data.resp;
-      
+                
+                var cripted = request.data.isEncrypted;
+           
                 setRSize(request.data.rsize);
                 setQuestions(request.data.questions);
-                setResponses(data);
+                setResponses(request.data.resp);
                 setCripted(request.data.isEncrypted);
-
-
-                processChartData(data, request.data.questions);
+                
+                processChartData(request.data.resp, request.data.questions);
 
             } catch (error) {
                 console.error("Error obteniendo respuestas:", error);
