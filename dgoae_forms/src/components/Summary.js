@@ -77,6 +77,19 @@ function Summary() {
     }, [token, id]);
 
     const processChartData = (data, questions) => {
+
+        let info = [];
+        console.log(data);
+        if (isCripted) {
+            info = data.map((r) => decryptValues(r));
+
+        } else {
+            info = data;
+        }
+      
+
+
+
         let freqData = {};
         
         const relevantQuestions = questions.filter(q => q.questionType === "radio" || q.questionType === "checkbox");
@@ -85,7 +98,7 @@ function Summary() {
             freqData[q.questionText] = {};
         });
         
-        data.forEach(entry => {
+        info.forEach(entry => {
             relevantQuestions.forEach(q => {
                 const answer = entry[q.questionText];
                 if (answer) {
@@ -114,10 +127,22 @@ function Summary() {
     const colors = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1", "#a4de6c"];
     
     async function descargaExcel() {
+
+        let info = [];
+        console.log(responses);
+        if (isCripted) {
+            info = responses.map((r) => decryptValues(r));
+
+        } else {
+            info = responses;
+        }
+      
+
+
         if (!responses.length) return;
         const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
         const fileExtension = '.xlsx';
-        const ws = XLSX.utils.json_to_sheet(responses);
+        const ws = XLSX.utils.json_to_sheet(info);
         const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
         const data = new Blob([excelBuffer], { type: fileType });
