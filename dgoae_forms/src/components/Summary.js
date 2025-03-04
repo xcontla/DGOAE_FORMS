@@ -64,17 +64,12 @@ function Summary() {
             try {
                 var request = await axios.get(API_URL + `/getResponses?id=${id}&username=${user.name}`, getConfigHeader(token));
                 let data = request.data.resp;
-
-                setRSize(request.data.rsize);
-
                 var cripted = request.data.isEncrypted;
 
-               
+                setRSize(request.data.rsize);
                 setQuestions(request.data.questions);
                 setResponses(data);
                 processChartData(data, request.data.questions);
-
-
 
                 isCripted = cripted;
                 setCripted(isCripted);
