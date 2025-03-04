@@ -37,11 +37,21 @@ function Summary() {
         headers: { dgoaetoken: _token }
     });
 
-    const decryptInformation = (wordTextCipher) => {
-        if (!isCripted) return wordTextCipher;
-        var bytes = CryptoJS.AES.decrypt(wordTextCipher, ENCRYPT_STRING);
-        return bytes.toString(CryptoJS.enc.Utf8);
-    };
+ const decryptInformation = (wordTextCipher) => {
+
+
+    if (!isCripted)
+      return wordTextCipher;
+
+    var bytes = CryptoJS.AES.decrypt(
+      wordTextCipher,
+      ENCRYPT_STRING
+    );
+
+
+    var textoPlano = bytes.toString(CryptoJS.enc.Utf8);
+    return textoPlano;
+  };
 
     const decryptValues = (obj) => {
         let resp = {};
@@ -74,15 +84,8 @@ function Summary() {
 
     const processChartData = (data, questions) => {
 
-        let info = [];
-        console.log(data);
-        if (isCripted) {
-            info = data.map((r) => decryptValues(r));
-
-        } else {
-            info = data;
-        }
-      
+        console.log("Data", data);
+        console.log("Questions", questions);
 
         let freqData = {};
         
@@ -92,7 +95,7 @@ function Summary() {
             freqData[q.questionText] = {};
         });
         
-        info.forEach(entry => {
+        data.forEach(entry => {
             relevantQuestions.forEach(q => {
                 const answer = entry[q.questionText];
                 if (answer) {
