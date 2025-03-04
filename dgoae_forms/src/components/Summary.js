@@ -105,12 +105,12 @@ function Summary() {
         info.forEach(entry => {
             console.log("Entry", entry);
             relevantQuestions.forEach(q => {
-                const answer = decryptValues(entry[q.questionText]);
+                const answer = decryptInformation(entry[q.questionText]);
                 console.log("answer", answer);
                 if (answer) {
                     if (Array.isArray(answer)) {
                         answer.forEach(opt => {
-                            freqData[q.questionText][decryptValues(opt)] = (freqData[q.questionText][decryptValues(opt)] || 0) + 1;
+                            freqData[q.questionText][(opt)] = (freqData[q.questionText][(opt)] || 0) + 1;
                         });
                     } else {
                         freqData[q.questionText][answer] = (freqData[q.questionText][answer] || 0) + 1;
