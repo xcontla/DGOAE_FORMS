@@ -37,16 +37,16 @@ function Summary() {
         headers: { dgoaetoken: _token }
     });
 
- const decryptInformation = (wordTextCipher) => {
+    const decryptInformation = (wordTextCipher) => {
 
-    if (!isCripted)
-      return wordTextCipher;
+        if (!isCripted)
+            return wordTextCipher;
 
-    var bytes = CryptoJS.AES.decrypt(wordTextCipher,ENCRYPT_STRING);
+        var bytes = CryptoJS.AES.decrypt(wordTextCipher, ENCRYPT_STRING);
 
-    var textoPlano = bytes.toString(CryptoJS.enc.Utf8);
-    return textoPlano;
-  };
+        var textoPlano = bytes.toString(CryptoJS.enc.Utf8);
+        return textoPlano;
+    };
 
     const decryptValues = (obj) => {
         let resp = {};
@@ -64,13 +64,21 @@ function Summary() {
             try {
                 var request = await axios.get(API_URL + `/getResponses?id=${id}&username=${user.name}`, getConfigHeader(token));
                 let data = request.data.resp;
-                
+
                 setRSize(request.data.rsize);
-                isCripted = request.data.isEncrypted;
+
+                var cripted = request.data.isEncrypted;
+
                 setCripted(isCripted);
                 setQuestions(request.data.questions);
                 setResponses(data);
                 processChartData(data, request.data.questions);
+
+
+
+                isCripted = cripted;
+                setCripted(isCripted);
+
             } catch (error) {
                 console.error("Error obteniendo respuestas:", error);
             }
@@ -81,13 +89,13 @@ function Summary() {
     const processChartData = (data, questions) => {
 
         console.log("Data", isCripted, data);
-        console.log("Questions" , questions);
+        console.log("Questions", questions);
 
         let freqData = {};
-        
+
         const relevantQuestions = questions.filter(q => q.questionType === "radio" || q.questionType === "checkbox");
-        
-        
+
+
         let info = [];
         if (isCripted) {
             info = data.map((r) => decryptValues(r));
@@ -101,7 +109,7 @@ function Summary() {
         relevantQuestions.forEach(q => {
             freqData[q.questionText] = {};
         });
-        
+
         info.forEach(entry => {
             relevantQuestions.forEach(q => {
                 const answer = entry[q.questionText];
@@ -116,7 +124,7 @@ function Summary() {
                 }
             });
         });
-        
+
         let formattedChartData = relevantQuestions.map(q => {
             let data = { question: q.questionText };
             Object.keys(freqData[q.questionText]).forEach(option => {
@@ -124,12 +132,12 @@ function Summary() {
             });
             return data;
         });
-        
+
         setChartData(formattedChartData);
     };
 
     const colors = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1", "#a4de6c"];
-    
+
     async function descargaExcel() {
 
         let info = [];
