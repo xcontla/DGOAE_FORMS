@@ -83,20 +83,10 @@ function Summary() {
             info = data;
         }
       
-        let infoquestions = [];
-        console.log(questions);
-        if (isCripted) {
-            infoquestions = questions.map((r) => decryptValues(r));
-
-        } else {
-            infoquestions = questions;
-        }
-      
-
 
         let freqData = {};
         
-        const relevantQuestions = infoquestions.filter(q => q.questionType === "radio" || q.questionType === "checkbox");
+        const relevantQuestions = questions.filter(q => q.questionType === "radio" || q.questionType === "checkbox");
         
         relevantQuestions.forEach(q => {
             freqData[q.questionText] = {};
