@@ -52,7 +52,7 @@ function Responses() {
         var request = await axios.get(
           API_URL + `/getResponses?id=${id}&username=${user.name}`, getConfigHeader(token)
         );
-
+        console.log(request.data); 
         var cripted = request.data.isEncrypted;
         responses = request.data.resp;
         rsize = request.data.rsize;

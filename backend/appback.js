@@ -688,6 +688,7 @@ appback.get(`/getResponses`, async (req, res) => {
     const isEnabled = accessfile.enable;
     const isEncrypted = accessfile.isEncrypted;
     const fgid = accessfile.gid;
+    const s_questions = await Form.findOne({ IdPregunta: fid });
     const s_response = await Response.findOne({ gid: fgid });
 
     let json_responses = {
@@ -697,6 +698,7 @@ appback.get(`/getResponses`, async (req, res) => {
       doc_name: "",
       isEnabled: isEnabled,
       isEncrypted: isEncrypted,
+      questions : s_questions?.questions
 
     };
   
@@ -711,6 +713,7 @@ appback.get(`/getResponses`, async (req, res) => {
         doc_name: s_response?.doc_name,
         isEnabled: isEnabled,
         isEncrypted: isEncrypted,
+        questions : s_questions?.questions
   
       };
 

@@ -146,8 +146,6 @@ export const UserForm = () => {
 
   function submit() {
 
-    console.log("ALGO", answer);
-
     answer.map((ele) => {
       if (isEncrypted === true) {
         post_answer_data[ele.question] = encryptInformation(ele.answer);
@@ -158,19 +156,12 @@ export const UserForm = () => {
 
     });
 
-
-    console.log("ALGO2");
-
     var send_info = false;
-
-    
-    console.log(questions);
 
     questions.map((ele) => {
   
       if (ele.required) {
         
-        console.log(ele);
         var k = answer.findIndex((el) => el.question === ele.questionText);
 
         
@@ -187,8 +178,6 @@ export const UserForm = () => {
 
     });
 
-
-    console.log("ALGO3", send_info);
 
     if(send_info){
       console.log("Respuestas Enviando Respuestas");
