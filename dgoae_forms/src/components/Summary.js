@@ -58,16 +58,12 @@ function Summary() {
             if (!token) return;
             try {
                 var request = await axios.get(API_URL + `/getResponses?id=${id}&username=${user.name}`, getConfigHeader(token));
-                let data = request.data.resp;
-                
+                               
                 setRSize(request.data.rsize);
                 setCripted(request.data.isEncrypted);
                 setQuestions(request.data.questions);
-                
-                if (request.data.isEncrypted) {
-                    data = data.map(decryptValues);
-                }
-                setResponses(data);
+         
+                setResponses(request.data.isEncrypted);
             } catch (error) {
                 console.error("Error obteniendo respuestas:", error);
             }
@@ -82,6 +78,19 @@ function Summary() {
     }, [responses, questions]);
 
     const processChartData = (data, questions) => {
+
+
+        console.log(responses);
+        let info = [];
+        if (isCripted) {
+           console.log("Info_____");
+            info = data.map((r) => decryptValues(r));
+
+        } else {
+            info = responses;
+        }
+        console.log("Info", info);
+
         let freqData = {};
         
         const relevantQuestions = questions.filter(q => q.questionType === "radio" || q.questionType === "checkbox");
@@ -90,7 +99,7 @@ function Summary() {
             freqData[q.questionText] = {};
         });
         
-        data.forEach(entry => {
+        info.forEach(entry => {
             relevantQuestions.forEach(q => {
                 const answer = entry[q.questionText];
                 if (answer) {
@@ -119,10 +128,23 @@ function Summary() {
     const colors = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1", "#a4de6c"];
     
     async function descargaExcel() {
+
+        console.log(responses);
+        let info = [];
+        if (isCripted) {
+           console.log("Info_____");
+            info = responses.map((r) => decryptValues(r));
+
+        } else {
+            info = responses;
+        }
+        console.log("Info", info);
+
+
         if (!responses.length) return;
         const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
         const fileExtension = '.xlsx';
-        const ws = XLSX.utils.json_to_sheet(responses);
+        const ws = XLSX.utils.json_to_sheet(info);
         const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
         const data = new Blob([excelBuffer], { type: fileType });
