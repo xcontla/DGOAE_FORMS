@@ -64,14 +64,12 @@ function Summary() {
             try {
                 var request = await axios.get(API_URL + `/getResponses?id=${id}&username=${user.name}`, getConfigHeader(token));
                 
-                var cripted = request.data.isEncrypted;
-           
                 setRSize(request.data.rsize);
                 setQuestions(request.data.questions);
                 setResponses(request.data.resp);
                 setCripted(request.data.isEncrypted);
                 
-                processChartData(request.data.resp, request.data.questions);
+                processChartData(request.data.resp, request.data.questions, request.data.isEncrypted);
 
             } catch (error) {
                 console.error("Error obteniendo respuestas:", error);
@@ -80,9 +78,9 @@ function Summary() {
         getResponses();
     }, [token, id]);
 
-    const processChartData = (data, questions) => {
+    const processChartData = (data, questions, crypted) => {
 
-        console.log("Data", isCripted, data);
+        console.log("Data", crypted, data);
         console.log("Questions", questions);
 
         let freqData = {};
@@ -91,7 +89,7 @@ function Summary() {
 
 
         let info = [];
-        if (isCripted) {
+        if (crypted) {
             info = data.map((r) => decryptValues(r));
 
         } else {
