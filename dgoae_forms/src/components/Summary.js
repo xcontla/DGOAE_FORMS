@@ -66,7 +66,8 @@ function Summary() {
                 let data = request.data.resp;
                 
                 setRSize(request.data.rsize);
-                setCripted(request.data.isEncrypted);
+                isCripted = request.data.isEncrypted;
+                setCripted(isCripted);
                 setQuestions(request.data.questions);
                 setResponses(data);
                 processChartData(data, request.data.questions);
