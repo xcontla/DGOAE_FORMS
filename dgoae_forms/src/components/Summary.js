@@ -110,7 +110,7 @@ function Summary() {
                 if (answer) {
                     if (Array.isArray(answer)) {
                         answer.forEach(opt => {
-                            freqData[q.questionText][opt] = (freqData[q.questionText][opt] || 0) + 1;
+                            freqData[q.questionText][decryptValues(opt)] = (freqData[q.questionText][decryptValues(opt)] || 0) + 1;
                         });
                     } else {
                         freqData[q.questionText][answer] = (freqData[q.questionText][answer] || 0) + 1;
